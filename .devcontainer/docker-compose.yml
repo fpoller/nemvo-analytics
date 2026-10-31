@@ -1,0 +1,143 @@
+# Development stack for Nemvo Analytics.
+#
+#   WordPress   http://localhost:8090  (admin / admin)
+#   Mailpit     http://localhost:8095  (weekly reports and other WordPress mail)
+#   Adminer     http://localhost:8091  (server "db" user/password wordpress, or "statsdb" analytics)
+#   Cap         http://localhost:8092  (dashboard, admin key below)
+#
+# Statistics are stored in the WordPress database by default. The separate
+# "statsdb" server is configured through NEMVO_ANALYTICS_DB_* so you can try
+# moving statistics there and back (Settings > Database). Valkey and the
+# worker are used when the queue is turned on (Settings > Queue).
+#
+# Ports can be changed with WP_PORT, MAILPIT_PORT, ADMINER_PORT and CAP_PORT.
+
+name: nemvo-analytics
+
+x-wordpress-env: &wp-env
+  WORDPRESS_DB_HOST: db
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DB_USER: wordpress
+  WORDPRESS_DB_PASSWORD: wordpress
+  WORDPRESS_DEBUG: "1"
+  WORDPRESS_CONFIG_EXTRA: |
+    define( 'WP_ENVIRONMENT_TYPE', 'local' );
+    define( 'WP_DEBUG_LOG', true );
+    define( 'WP_DEBUG_DISPLAY', false );
+  # Start in the WordPress database; the external one below is ready for a migration.
+  NEMVO_ANALYTICS_STORAGE: local
+  NEMVO_ANALYTICS_DB_HOST: statsdb
+  NEMVO_ANALYTICS_DB_NAME: analytics
+  NEMVO_ANALYTICS_DB_USER: analytics
+  NEMVO_ANALYTICS_DB_PASSWORD: analytics
+  CAP_ADMIN_KEY: &cap-admin-key local-development-admin-key-change-me-0123456789
+  WP_PORT: "${WP_PORT:-8090}"
+  WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+
+x-wordpress-volumes: &wp-volumes
+  - wordpress:/var/www/html
+  - ../nemvo-analytics:/var/www/html/wp-content/plugins/nemvo-analytics
+  - ./mu-plugins:/var/www/html/wp-content/mu-plugins
+  - ..:/workspace:cached
+
+services:
+  wordpress:
+    image: wordpress:php8.3-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      statsdb:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT:-8090}:80"
+    environment: *wp-env
+    volumes: *wp-volumes
+
+  # Writes queued hits in batches (only does work while the queue is on).
+  worker:
+    image: wordpress:cli-php8.3
+    restart: unless-stopped
+    user: "33:33"
+    depends_on:
+      - wordpress
+    environment: *wp-env
+    volumes: *wp-volumes
+    command: ["sh", "-c", "until wp core is-installed >/dev/null 2>&1; do sleep 5; done; exec wp nemvo-analytics queue work --loop"]
+
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: wordpress
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  statsdb:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: analytics
+      MARIADB_USER: analytics
+      MARIADB_PASSWORD: analytics
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - statsdb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  # Queue for hits (database 0) and Cap's store (database 1). No persistence:
+  # queued hits only live for seconds, and no IP addresses are queued.
+  valkey:
+    image: valkey/valkey:9-alpine
+    restart: unless-stopped
+    command: valkey-server --save "" --appendonly no --maxmemory 128mb --maxmemory-policy noeviction --loglevel warning
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  cap:
+    image: tiago2/cap:latest
+    restart: unless-stopped
+    depends_on:
+      valkey:
+        condition: service_healthy
+    environment:
+      ADMIN_KEY: *cap-admin-key
+      REDIS_URL: redis://valkey:6379/1
+    ports:
+      - "${CAP_PORT:-8092}:3000"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT:-8095}:8025"
+
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    ports:
+      - "${ADMINER_PORT:-8091}:8080"
+
+volumes:
+  wordpress:
+  db:
+  statsdb:

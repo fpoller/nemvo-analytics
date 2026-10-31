@@ -1,0 +1,2854 @@
+# Copyright (C) 2026 Nemvo
+# This file is distributed under the MIT.
+msgid ""
+msgstr ""
+"Project-Id-Version: Nemvo Analytics 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/fpoller/nemvo-analytics/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-31T19:28:17+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: nemvo-analytics\n"
+
+#. Plugin Name of the plugin
+#: nemvo-analytics.php
+msgid "Nemvo Analytics"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: nemvo-analytics.php
+msgid "https://github.com/fpoller/nemvo-analytics"
+msgstr ""
+
+#. Description of the plugin
+#: nemvo-analytics.php
+msgid "Privacy-friendly, self-hosted web analytics: traffic sources, pages, engagement, countries, visiting companies, devices and goals, with bot detection. No cookies, no third-party services."
+msgstr ""
+
+#. Author of the plugin
+#: nemvo-analytics.php
+msgid "Nemvo"
+msgstr ""
+
+#. Author URI of the plugin
+#: nemvo-analytics.php
+msgid "https://nemvo.eu"
+msgstr ""
+
+#: includes/class-admin.php:62
+#: includes/class-admin.php:63
+#: includes/class-health.php:211
+#: templates/dashboard.php:13
+#: templates/settings.php:313
+#: assets/js/dashboard.js:760
+#: assets/js/dashboard.js:1032
+#: assets/js/dashboard.js:3013
+msgid "Analytics"
+msgstr ""
+
+#: includes/class-admin.php:70
+msgid "Analytics dashboard"
+msgstr ""
+
+#: includes/class-admin.php:70
+#: includes/class-admin.php:122
+#: templates/settings.php:314
+#: assets/js/dashboard.js:761
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-admin.php:71
+#: templates/settings.php:315
+#: assets/js/dashboard.js:762
+#: assets/js/dashboard.js:2865
+msgid "Realtime"
+msgstr ""
+
+#: includes/class-admin.php:72
+#: includes/class-health.php:215
+#: templates/settings.php:311
+msgid "Analytics settings"
+msgstr ""
+
+#: includes/class-admin.php:72
+#: includes/class-admin.php:121
+#: templates/settings.php:316
+#: templates/settings.php:358
+#: assets/js/dashboard.js:763
+msgid "Settings"
+msgstr ""
+
+#: includes/class-admin.php:256
+msgid "Nemvo Analytics is collecting statistics."
+msgstr ""
+
+#: includes/class-admin.php:257
+msgid "Visits show up on the dashboard within seconds. Logged-in administrators and editors are not counted; use a private window to see your own visit. The setup checklist on the settings page shows what else is worth turning on."
+msgstr ""
+
+#: includes/class-admin.php:259
+#: templates/settings.php:348
+#: assets/js/dashboard.js:1340
+msgid "Setup checklist"
+msgstr ""
+
+#: includes/class-admin.php:261
+#: includes/class-report.php:137
+msgid "Open the dashboard"
+msgstr ""
+
+#: includes/class-admin.php:284
+msgid "Analytics – last 7 days"
+msgstr ""
+
+#: includes/class-admin.php:294
+msgid "The statistics database is not reachable."
+msgstr ""
+
+#: includes/class-admin.php:315
+#: includes/class-report.php:54
+#: assets/js/dashboard.js:828
+#: assets/js/dashboard.js:841
+#: assets/js/dashboard.js:2680
+msgid "Visitors"
+msgstr ""
+
+#: includes/class-admin.php:316
+#: includes/class-report.php:55
+#: assets/js/dashboard.js:830
+#: assets/js/dashboard.js:2679
+msgid "Pageviews"
+msgstr ""
+
+#: includes/class-admin.php:317
+#: includes/class-report.php:57
+#: assets/js/dashboard.js:833
+msgid "Bounce rate"
+msgstr ""
+
+#: includes/class-admin.php:318
+#: includes/class-report.php:58
+#: assets/js/dashboard.js:277
+#: assets/js/dashboard.js:834
+msgid "Conversions"
+msgstr ""
+
+#: includes/class-admin.php:326
+msgid "Visitors per day"
+msgstr ""
+
+#: includes/class-admin.php:330
+#: includes/class-report.php:91
+#: assets/js/dashboard.js:986
+msgid "Top pages"
+msgstr ""
+
+#: includes/class-admin.php:330
+#: assets/js/dashboard.js:843
+msgid "Views"
+msgstr ""
+
+#: includes/class-admin.php:336
+msgid "Open analytics"
+msgstr ""
+
+#: includes/class-admin.php:349
+msgid "Views (30d)"
+msgstr ""
+
+#: includes/class-admin.php:381
+msgid "Sorry, you are not allowed to export statistics."
+msgstr ""
+
+#: includes/class-admin.php:429
+msgid "Sorry, you are not allowed to do that."
+msgstr ""
+
+#: includes/class-bot.php:65
+msgid "Crawler or tool user agent"
+msgstr ""
+
+#: includes/class-bot.php:66
+msgid "Automated browser"
+msgstr ""
+
+#: includes/class-bot.php:67
+msgid "Hit sent without the tracker"
+msgstr ""
+
+#: includes/class-bot.php:68
+msgid "Referrer spam"
+msgstr ""
+
+#: includes/class-bot.php:69
+msgid "Datacenter or VPN network"
+msgstr ""
+
+#: includes/class-bot.php:70
+msgid "Too many pages too fast"
+msgstr ""
+
+#: includes/class-bot.php:71
+msgid "Browser inconsistencies"
+msgstr ""
+
+#: includes/class-bot.php:72
+msgid "No Accept-Language header"
+msgstr ""
+
+#: includes/class-bot.php:73
+msgid "No interaction at all"
+msgstr ""
+
+#: includes/class-bot.php:74
+msgid "Missing browser request headers"
+msgstr ""
+
+#: includes/class-bot.php:75
+msgid "Mouse, touch, keyboard or scroll"
+msgstr ""
+
+#: includes/class-bot.php:76
+msgid "Solved the proof of work"
+msgstr ""
+
+#: includes/class-bot.php:77
+msgid "Passed Cap"
+msgstr ""
+
+#: includes/class-cap.php:203
+msgid "Enter the server address, site key and secret key first."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-cap.php:223
+#, php-format
+msgid "Cap is not reachable from WordPress: %s"
+msgstr ""
+
+#. translators: %d: HTTP status
+#: includes/class-cap.php:231
+#, php-format
+msgid "The server answered with HTTP %d but not like Cap. Check the address and the site key."
+msgstr ""
+
+#: includes/class-cap.php:237
+msgid "Cap rejected the site key or the secret key."
+msgstr ""
+
+#: includes/class-cap.php:242
+msgid "Cap is reachable and accepts the keys."
+msgstr ""
+
+#. translators: 1: host:port, 2: error message
+#: includes/class-connection.php:59
+#, php-format
+msgid "Could not reach %1$s: %2$s"
+msgstr ""
+
+#. translators: 1: host:port, 2: error message
+#: includes/class-connection.php:59
+msgid "no answer"
+msgstr ""
+
+#: includes/class-connection.php:69
+msgid "Could not connect to the database server."
+msgstr ""
+
+#: includes/class-connection.php:73
+msgid "Connected, but could not select the database."
+msgstr ""
+
+#: includes/class-cron.php:49
+msgid "Every minute"
+msgstr ""
+
+#: includes/class-db.php:160
+msgid "No external database is configured."
+msgstr ""
+
+#. translators: %s: database server version
+#: includes/class-db.php:456
+#, php-format
+msgid "Connected to %s."
+msgstr ""
+
+#. translators: %s: database server version
+#: includes/class-db.php:456
+msgid "Warning: the user may lack the CREATE privilege needed to create tables."
+msgstr ""
+
+#: includes/class-geo.php:304
+msgid "Unknown database edition."
+msgstr ""
+
+#: includes/class-geo.php:310
+msgid "Could not create the upload directory for the IP databases."
+msgstr ""
+
+#: includes/class-geo.php:347
+msgid "The downloaded IP database is not valid."
+msgstr ""
+
+#: includes/class-geo.php:350
+msgid "Could not save the IP database."
+msgstr ""
+
+#: includes/class-health.php:86
+msgid "a page cache (advanced-cache.php)"
+msgstr ""
+
+#: includes/class-health.php:101
+msgid "Collecting statistics"
+msgstr ""
+
+#: includes/class-health.php:101
+msgid "The tracker is printed on every public page."
+msgstr ""
+
+#: includes/class-health.php:102
+msgid "Tracking is paused"
+msgstr ""
+
+#: includes/class-health.php:102
+msgid "No new visits are recorded."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-health.php:107
+#: assets/js/dashboard.js:3017
+msgid "The statistics database is not reachable"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-health.php:107
+#, php-format
+msgid "Hits are not saved: %s"
+msgstr ""
+
+#: includes/class-health.php:109
+msgid "Statistics are stored in the external database"
+msgstr ""
+
+#: includes/class-health.php:109
+msgid "Statistics are stored in the WordPress database"
+msgstr ""
+
+#: includes/class-health.php:109
+msgid "Fine for most sites. A separate database is available if you need it."
+msgstr ""
+
+#. translators: %s: plugin names
+#: includes/class-health.php:117
+#, php-format
+msgid "Caching or optimization detected: %s"
+msgstr ""
+
+#: includes/class-health.php:118
+msgid "Nemvo Analytics is made for sites without page caching. Cached pages are still counted, but \"delay JavaScript\", combine and minify features can hold back or break the tracker, and a cached page can be served to excluded logged-in users. Exclude the script with the id \"nva-tracker\" from those features, or turn the cache off."
+msgstr ""
+
+#. translators: %s: header name
+#: includes/class-health.php:128
+#, php-format
+msgid "A proxy or CDN sits in front of the site (%s header seen)"
+msgstr ""
+
+#: includes/class-health.php:129
+msgid "Visitors then share the proxy's address: they count as fewer people, and location and company lookups fail. If you control the proxy, turn on \"Trust proxy headers\" under Geolocation. Otherwise, run the site without it."
+msgstr ""
+
+#: includes/class-health.php:136
+msgid "No IP location database"
+msgstr ""
+
+#: includes/class-health.php:136
+msgid "Countries come from the browser time zone only. Download the free DB-IP database for countries, or the city edition for cities."
+msgstr ""
+
+#. translators: %d: days
+#: includes/class-health.php:139
+msgid "The IP location database is old"
+msgstr ""
+
+#. translators: %d: days
+#: includes/class-health.php:139
+#, php-format
+msgid "Built %d days ago. Update it, or turn on monthly updates."
+msgstr ""
+
+#: includes/class-health.php:142
+msgid "No network (ASN) database"
+msgstr ""
+
+#: includes/class-health.php:142
+msgid "Without it, visiting companies, ISPs and datacenter traffic cannot be told apart. Download the free DB-IP ASN database under Companies & networks."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-health.php:151
+msgid "The queue is not reachable"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-health.php:151
+#, php-format
+msgid "Hits are written directly to the database meanwhile. %s"
+msgstr ""
+
+#. translators: %s: number of hits
+#: includes/class-health.php:154
+msgid "The queue is not being processed"
+msgstr ""
+
+#. translators: %s: number of hits
+#: includes/class-health.php:154
+#, php-format
+msgid "%s hits are waiting. Start the worker (wp nemvo-analytics queue work --loop) or make sure WP-Cron runs."
+msgstr ""
+
+#. translators: %s: number of hits
+#: includes/class-health.php:157
+msgid "The queue is working"
+msgstr ""
+
+#. translators: %s: number of hits
+#: includes/class-health.php:157
+#, php-format
+msgid "%s hits waiting."
+msgstr ""
+
+#: includes/class-health.php:162
+msgid "Bot detection with Cap"
+msgstr ""
+
+#: includes/class-health.php:162
+msgid "Every visit solves an invisible Cap challenge."
+msgstr ""
+
+#: includes/class-health.php:163
+msgid "Bot detection is on"
+msgstr ""
+
+#: includes/class-health.php:163
+msgid "Request checks, browser checks, behaviour and the built-in proof of work. Cap can be added for stronger proof."
+msgstr ""
+
+#: includes/class-health.php:163
+msgid "Request checks, browser checks and behaviour."
+msgstr ""
+
+#: includes/class-health.php:176
+msgid "Nemvo Analytics setup"
+msgstr ""
+
+#: includes/class-health.php:208
+msgid "Nemvo Analytics is set up correctly"
+msgstr ""
+
+#: includes/class-health.php:214
+msgid "Statistics are being collected and stored."
+msgstr ""
+
+#: includes/class-migration.php:43
+msgid "Statistics are already stored there."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-migration.php:47
+#, php-format
+msgid "The current database is not reachable: %s"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-migration.php:51
+#, php-format
+msgid "The target database is not reachable: %s"
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-migration.php:55
+#, php-format
+msgid "Could not create the tables in the target database: %s"
+msgstr ""
+
+#. translators: %s: number of visits
+#: includes/class-migration.php:63
+#, php-format
+msgid "The target database already holds %s visits. Confirm that they may be replaced."
+msgstr ""
+
+#: includes/class-migration.php:101
+msgid "No migration is running."
+msgstr ""
+
+#: includes/class-migration.php:106
+msgid "A database became unreachable. Run the migration again to continue where it stopped."
+msgstr ""
+
+#. translators: %s: error message
+#: includes/class-migration.php:115
+#: includes/class-migration.php:143
+#, php-format
+msgid "Writing to the target database failed: %s"
+msgstr ""
+
+#. translators: %s: number of rows
+#: includes/class-migration.php:184
+#, php-format
+msgid "Done: %s rows copied. Statistics are now stored in the new location."
+msgstr ""
+
+#. translators: 1: rows copied, 2: rows in total
+#: includes/class-migration.php:186
+#, php-format
+msgid "Copying… %1$s of %2$s rows"
+msgstr ""
+
+#: includes/class-network.php:170
+msgid "Business"
+msgstr ""
+
+#: includes/class-network.php:171
+msgid "Residential"
+msgstr ""
+
+#: includes/class-network.php:172
+msgid "ISP (home or office)"
+msgstr ""
+
+#: includes/class-network.php:173
+msgid "Mobile network"
+msgstr ""
+
+#: includes/class-network.php:174
+msgid "Hosting / VPN"
+msgstr ""
+
+#: includes/class-network.php:175
+msgid "Education / research"
+msgstr ""
+
+#: includes/class-network.php:176
+msgid "Government"
+msgstr ""
+
+#: includes/class-privacy.php:194
+msgid "We use a self-hosted, privacy-friendly analytics tool to understand how our website is used. It does not use cookies or similar technologies, does not store your IP address, and does not create profiles across websites or over time."
+msgstr ""
+
+#: includes/class-privacy.php:195
+msgid "To count unique visitors, a one-way hash of your IP address and browser user agent is combined with a secret that changes regularly; old secrets are deleted, so the hash cannot be linked back to you. We record the pages you visit, how long they are in view and how far you scroll, the referring website or campaign, your approximate location, your device, browser and operating system type, and the kind of network you visit from: for example a home connection, a mobile network, or the network of a company or organisation, whose name we may record. To tell people from automated traffic, your browser may solve a small computational puzzle in the background."
+msgstr ""
+
+#: includes/class-privacy.php:196
+msgid "The data is stored on our own servers, is never shared with third parties and is deleted automatically after a limited period. Browsers that send a Do Not Track or Global Privacy Control signal are not tracked."
+msgstr ""
+
+#: includes/class-privacy.php:198
+msgid "Suggested text for your privacy policy. Adjust it to your configuration. The [nemvo_analytics_optout] shortcode adds an opt-out checkbox."
+msgstr ""
+
+#: includes/class-privacy.php:199
+msgid "Suggested text:"
+msgstr ""
+
+#: includes/class-queue.php:280
+msgid "The server did not answer PING."
+msgstr ""
+
+#. translators: 1: Valkey or Redis, 2: version
+#: includes/class-queue.php:288
+#, php-format
+msgid "Connected to %1$s %2$s."
+msgstr ""
+
+#. translators: 1: address, 2: error
+#: includes/class-queue.php:314
+#, php-format
+msgid "Could not connect to %1$s: %2$s"
+msgstr ""
+
+#: includes/class-queue.php:345
+msgid "The queue is not configured."
+msgstr ""
+
+#: includes/class-queue.php:350
+msgid "The queue is not reachable."
+msgstr ""
+
+#: includes/class-queue.php:359
+msgid "The connection to the queue was lost."
+msgstr ""
+
+#: includes/class-queue.php:373
+#: includes/class-queue.php:395
+msgid "The queue did not answer in time."
+msgstr ""
+
+#: includes/class-queue.php:415
+msgid "Unexpected answer from the queue."
+msgstr ""
+
+#. translators: %s: site name
+#: includes/class-report.php:32
+#, php-format
+msgid "[%s] Weekly analytics report"
+msgstr ""
+
+#: includes/class-report.php:56
+#: assets/js/dashboard.js:832
+msgid "Visit duration"
+msgstr ""
+
+#: includes/class-report.php:92
+msgid "Top sources"
+msgstr ""
+
+#: includes/class-report.php:93
+#: includes/class-report.php:106
+#: assets/js/dashboard.js:1971
+#: assets/js/dashboard.js:2856
+msgid "Countries"
+msgstr ""
+
+#: includes/class-report.php:94
+#: assets/js/dashboard.js:999
+msgid "Companies"
+msgstr ""
+
+#: includes/class-report.php:107
+#: assets/js/dashboard.js:330
+msgid "Unknown"
+msgstr ""
+
+#. translators: 1: start date, 2: end date
+#: includes/class-report.php:133
+#, php-format
+msgid "Analytics for %1$s – %2$s"
+msgstr ""
+
+#. translators: %s: database error
+#: includes/class-rest-stats.php:118
+#, php-format
+msgid "The statistics database is not reachable: %s"
+msgstr ""
+
+#: includes/class-rest-stats.php:367
+msgid "This visit no longer exists."
+msgstr ""
+
+#: includes/class-rest-stats.php:443
+msgid "Tables are ready."
+msgstr ""
+
+#: includes/class-rest-stats.php:460
+msgid "The old copy was deleted."
+msgstr ""
+
+#: includes/class-rest-stats.php:460
+msgid "The old copy could not be deleted."
+msgstr ""
+
+#: includes/class-rest-stats.php:469
+msgid "All statistics were deleted."
+msgstr ""
+
+#: includes/class-rest-stats.php:478
+msgid "Pick a date."
+msgstr ""
+
+#. translators: %s: number of rows
+#: includes/class-rest-stats.php:487
+#, php-format
+msgid "%s rows deleted."
+msgstr ""
+
+#. translators: 1: database type, 2: build date, 3: file size
+#: includes/class-rest-stats.php:514
+#, php-format
+msgid "Installed %1$s (built %2$s, %3$s)."
+msgstr ""
+
+#: includes/class-rest-stats.php:534
+msgid "That is not an IP address."
+msgstr ""
+
+#: includes/class-rest-stats.php:620
+msgid "The queue is off."
+msgstr ""
+
+#. translators: %s: number of hits
+#: includes/class-rest-stats.php:629
+#, php-format
+msgid "%s hits written."
+msgstr ""
+
+#: includes/class-settings.php:325
+msgid "The queue was not turned on because no Valkey host is set."
+msgstr ""
+
+#: includes/class-settings.php:329
+msgid "Cap was not turned on because the server address, site key or secret key is missing."
+msgstr ""
+
+#: includes/class-tracker.php:54
+msgid "Include my visits in this site's anonymous statistics."
+msgstr ""
+
+#: templates/dashboard.php:15
+msgid "The analytics dashboard needs JavaScript."
+msgstr ""
+
+#: templates/settings.php:41
+msgid "constants in wp-config.php"
+msgstr ""
+
+#: templates/settings.php:42
+msgid "environment variables (e.g. Docker Compose)"
+msgstr ""
+
+#: templates/settings.php:43
+msgid "the credentials saved on this page"
+msgstr ""
+
+#: templates/settings.php:44
+msgid "WordPress itself"
+msgstr ""
+
+#: templates/settings.php:82
+msgid "Copy"
+msgstr ""
+
+#. translators: 1: user@host/database, 2: where the settings come from
+#: templates/settings.php:304
+#, php-format
+msgid "%1$s, set by %2$s"
+msgstr ""
+
+#: templates/settings.php:322
+msgid "The report was sent to your email address."
+msgstr ""
+
+#: templates/settings.php:324
+msgid "The report could not be sent. Check that WordPress can send email and that the statistics database is reachable."
+msgstr ""
+
+#: templates/settings.php:328
+msgid "Settings sections"
+msgstr ""
+
+#: templates/settings.php:329
+msgid "Setup"
+msgstr ""
+
+#: templates/settings.php:330
+#: templates/settings.php:365
+msgid "Tracking"
+msgstr ""
+
+#: templates/settings.php:331
+#: templates/settings.php:404
+#: assets/js/dashboard.js:1009
+msgid "Goals"
+msgstr ""
+
+#: templates/settings.php:332
+#: templates/settings.php:465
+#: assets/js/dashboard.js:997
+msgid "Companies & networks"
+msgstr ""
+
+#: templates/settings.php:333
+#: templates/settings.php:508
+msgid "Geolocation"
+msgstr ""
+
+#: templates/settings.php:334
+#: templates/settings.php:550
+#: assets/js/dashboard.js:278
+#: assets/js/dashboard.js:2508
+msgid "Automated traffic"
+msgstr ""
+
+#: templates/settings.php:335
+#: templates/settings.php:598
+msgid "Database"
+msgstr ""
+
+#: templates/settings.php:336
+#: templates/settings.php:693
+msgid "Queue"
+msgstr ""
+
+#: templates/settings.php:337
+#: templates/settings.php:736
+msgid "Privacy & retention"
+msgstr ""
+
+#: templates/settings.php:338
+#: templates/settings.php:763
+msgid "Access"
+msgstr ""
+
+#: templates/settings.php:339
+#: templates/settings.php:769
+msgid "Email reports"
+msgstr ""
+
+#: templates/settings.php:340
+#: templates/settings.php:780
+msgid "Data"
+msgstr ""
+
+#: templates/settings.php:341
+msgid "Developers"
+msgstr ""
+
+#: templates/settings.php:349
+msgid "Nemvo Analytics works as soon as it is activated. These checks show what is worth a look on this site; the same checks appear under Tools › Site Health."
+msgstr ""
+
+#: templates/settings.php:367
+msgid "Collect statistics"
+msgstr ""
+
+#: templates/settings.php:367
+msgid "Turn off to pause collection without losing data."
+msgstr ""
+
+#: templates/settings.php:368
+msgid "Respect Do Not Track and Global Privacy Control"
+msgstr ""
+
+#: templates/settings.php:369
+msgid "Print the tracker inline (6 KB)"
+msgstr ""
+
+#: templates/settings.php:369
+msgid "Saves a request and is not blocked by URL-based filter lists."
+msgstr ""
+
+#: templates/settings.php:372
+msgid "Do not track these logged-in roles"
+msgstr ""
+
+#. translators: 1: #nva-ignore, 2: #nva-track
+#: templates/settings.php:377
+#, php-format
+msgid "To exclude your own browser without logging in, open any page of the site with %1$s at the end of the address. %2$s undoes it."
+msgstr ""
+
+#: templates/settings.php:382
+msgid "Excluded IP addresses"
+msgstr ""
+
+#: templates/settings.php:382
+msgid "One address or CIDR range per line, e.g. your office."
+msgstr ""
+
+#: templates/settings.php:383
+msgid "Excluded paths"
+msgstr ""
+
+#: templates/settings.php:383
+msgid "One per line; * matches anything."
+msgstr ""
+
+#: templates/settings.php:384
+msgid "Session timeout (minutes)"
+msgstr ""
+
+#: templates/settings.php:384
+msgid "A visit ends after this long without activity. 30 is the industry standard."
+msgstr ""
+
+#: templates/settings.php:387
+msgid "Automatic events"
+msgstr ""
+
+#: templates/settings.php:389
+msgid "Outbound link clicks"
+msgstr ""
+
+#: templates/settings.php:390
+msgid "File downloads"
+msgstr ""
+
+#: templates/settings.php:391
+msgid "Form submissions"
+msgstr ""
+
+#: templates/settings.php:391
+msgid "Including Contact Form 7, WPForms and Gravity Forms."
+msgstr ""
+
+#: templates/settings.php:392
+msgid "Email and phone link clicks"
+msgstr ""
+
+#: templates/settings.php:393
+msgid "Broken links (404 pages)"
+msgstr ""
+
+#: templates/settings.php:394
+msgid "Site search terms"
+msgstr ""
+
+#: templates/settings.php:395
+#: assets/js/dashboard.js:2684
+msgid "Scroll depth"
+msgstr ""
+
+#: templates/settings.php:398
+msgid "Download file extensions"
+msgstr ""
+
+#: templates/settings.php:400
+msgid "Made for sites without page caching or a CDN in front. If you use a caching or optimization plugin, exclude the script with the id \"nva-tracker\" from \"delay JavaScript\", combine and minify features; the tracker already carries the usual opt-out attributes for WP Rocket, LiteSpeed, Autoptimize and Cloudflare Rocket Loader."
+msgstr ""
+
+#: templates/settings.php:405
+msgid "A goal is a visit that reached a page or triggered an event. Goals drive the conversion numbers on the dashboard and can be used as filters."
+msgstr ""
+
+#: templates/settings.php:409
+#: templates/settings.php:422
+msgid "Name"
+msgstr ""
+
+#: templates/settings.php:410
+msgid "When a visit…"
+msgstr ""
+
+#: templates/settings.php:411
+#: templates/settings.php:430
+msgid "Match"
+msgstr ""
+
+#: templates/settings.php:412
+#: templates/settings.php:436
+msgid "Page path or event name"
+msgstr ""
+
+#: templates/settings.php:413
+msgid "Remove"
+msgstr ""
+
+#: templates/settings.php:422
+msgid "Requested a quote"
+msgstr ""
+
+#: templates/settings.php:424
+#: assets/js/settings.js:64
+msgid "Type"
+msgstr ""
+
+#: templates/settings.php:425
+msgid "visited a page"
+msgstr ""
+
+#: templates/settings.php:426
+msgid "triggered an event"
+msgstr ""
+
+#: templates/settings.php:431
+#: assets/js/dashboard.js:282
+msgid "is"
+msgstr ""
+
+#: templates/settings.php:432
+msgid "starts with"
+msgstr ""
+
+#: templates/settings.php:433
+#: assets/js/dashboard.js:284
+msgid "contains"
+msgstr ""
+
+#: templates/settings.php:437
+msgid "Remove goal"
+msgstr ""
+
+#: templates/settings.php:460
+msgid "Add goal"
+msgstr ""
+
+#: templates/settings.php:461
+msgid "Built-in event names: Form submit, File download, Outbound link, Email click, Phone click, Comment, 404 and Site search, plus any name you send yourself."
+msgstr ""
+
+#: templates/settings.php:466
+msgid "Shows which organisations visit: a prospect's office, a home connection, a phone on a mobile network, a university or a datacenter. Every network on the internet belongs to an autonomous system (ASN). Companies with their own ASN are named directly. For connections from an ISP, the reverse DNS name of the address separates home lines (e.g. c-83-233-1-2.bbcust.telenor.se) from business lines (e.g. fw.acme.se, which names the company)."
+msgstr ""
+
+#: templates/settings.php:468
+msgid "Looked up in memory when a visit starts. The IP address and the hostname are not stored; only the network owner, its type and a company name or domain are."
+msgstr ""
+
+#: templates/settings.php:469
+msgid "Hostnames are forward-confirmed (the name must point back to the same address), so nobody can pass themselves off as another company."
+msgstr ""
+
+#: templates/settings.php:470
+msgid "Reverse DNS uses your server's own resolver, with a hard time limit. No other service is asked."
+msgstr ""
+
+#: templates/settings.php:474
+msgid "Network database installed"
+msgstr ""
+
+#: templates/settings.php:474
+msgid "No network database yet"
+msgstr ""
+
+#. translators: 1: database type, 2: build date, 3: size
+#: templates/settings.php:479
+#: templates/settings.php:517
+#, php-format
+msgid "%1$s, built %2$s, %3$s"
+msgstr ""
+
+#: templates/settings.php:481
+msgid "Download the free DB-IP ASN database (10 MB) to identify networks and companies."
+msgstr ""
+
+#: templates/settings.php:487
+msgid "Update the ASN database"
+msgstr ""
+
+#: templates/settings.php:487
+msgid "Download the ASN database"
+msgstr ""
+
+#: templates/settings.php:492
+msgid "Identify networks and companies"
+msgstr ""
+
+#: templates/settings.php:493
+msgid "Use reverse DNS to tell offices from homes on ISP networks"
+msgstr ""
+
+#: templates/settings.php:493
+msgid "One DNS lookup per visit, only for ISP addresses, limited to a fraction of a second."
+msgstr ""
+
+#: templates/settings.php:496
+msgid "Your own ASN .mmdb database (optional)"
+msgstr ""
+
+#: templates/settings.php:496
+msgid "For example MaxMind GeoLite2 ASN, kept fresh by geoipupdate."
+msgstr ""
+
+#: templates/settings.php:498
+msgid "Try it"
+msgstr ""
+
+#: templates/settings.php:500
+msgid "IP address"
+msgstr ""
+
+#: templates/settings.php:500
+msgid "Leave empty for your own"
+msgstr ""
+
+#: templates/settings.php:501
+msgid "Look up"
+msgstr ""
+
+#: templates/settings.php:509
+msgid "Countries are looked up in memory while a hit is processed. The IP address is never written anywhere."
+msgstr ""
+
+#: templates/settings.php:512
+msgid "Location database installed"
+msgstr ""
+
+#: templates/settings.php:512
+msgid "No location database"
+msgstr ""
+
+#: templates/settings.php:519
+msgid "Using CDN headers and the browser time zone."
+msgstr ""
+
+#: templates/settings.php:525
+msgid "Countries (4 MB)"
+msgstr ""
+
+#: templates/settings.php:526
+msgid "Countries and cities (130 MB)"
+msgstr ""
+
+#: templates/settings.php:529
+msgid "Free DB-IP Lite databases (CC BY 4.0), downloaded only when you click. One location database is kept at a time."
+msgstr ""
+
+#: templates/settings.php:532
+msgid "Use country headers from a CDN or proxy"
+msgstr ""
+
+#: templates/settings.php:532
+msgid "Cloudflare, CloudFront, Vercel and others."
+msgstr ""
+
+#: templates/settings.php:533
+msgid "Fall back to the browser time zone"
+msgstr ""
+
+#: templates/settings.php:533
+msgid "Works without any IP database. Accurate for most countries, but cannot tell apart countries that share a zone."
+msgstr ""
+
+#: templates/settings.php:534
+msgid "Update the downloaded IP databases monthly"
+msgstr ""
+
+#: templates/settings.php:535
+msgid "Trust proxy headers for the visitor IP (X-Forwarded-For, CF-Connecting-IP)"
+msgstr ""
+
+#: templates/settings.php:535
+msgid "Only behind a reverse proxy or CDN you control, otherwise visitors can fake their address."
+msgstr ""
+
+#: templates/settings.php:538
+msgid "Your own location .mmdb database (optional)"
+msgstr ""
+
+#: templates/settings.php:539
+msgid "Precision stored"
+msgstr ""
+
+#: templates/settings.php:541
+msgid "Country only"
+msgstr ""
+
+#: templates/settings.php:542
+msgid "Country and region"
+msgstr ""
+
+#: templates/settings.php:543
+msgid "Country, region and city"
+msgstr ""
+
+#: templates/settings.php:551
+msgid "Every visit is recorded, and gets a bot score from 0 to 100. The dashboard shows people by default; switch it to \"Automated\" to see crawlers, scrapers, spam and fake hits, and why each was flagged."
+msgstr ""
+
+#: templates/settings.php:553
+#: assets/js/dashboard.js:2545
+msgid "Signal"
+msgstr ""
+
+#: templates/settings.php:553
+msgid "Points"
+msgstr ""
+
+#: templates/settings.php:564
+msgid "Count a visit as automated from this score"
+msgstr ""
+
+#: templates/settings.php:564
+msgid "Default 50. A datacenter address alone (40) stays a person, e.g. someone on a VPN."
+msgstr ""
+
+#: templates/settings.php:567
+msgid "Built-in proof of work"
+msgstr ""
+
+#: templates/settings.php:567
+msgid "Each new visit solves a small SHA-256 puzzle in the background (a few dozen milliseconds of idle time, only on HTTPS). Scripts that fake hits can't."
+msgstr ""
+
+#: templates/settings.php:570
+msgid "Cap (optional, stronger proof)"
+msgstr ""
+
+#: templates/settings.php:571
+msgid "Cap is an open-source proof-of-work CAPTCHA you host yourself. With Cap on, each new visit solves an invisible Cap challenge instead of the built-in one, and the result is verified by your Cap server. Visitors only talk to your site: WordPress relays the challenge to Cap, so Cap can stay on an internal network. The Cap widget comes with this plugin and is loaded only when a visit needs it."
+msgstr ""
+
+#: templates/settings.php:573
+msgid "Install Cap with Docker Compose"
+msgstr ""
+
+#: templates/settings.php:575
+msgid "Add the services below to the docker-compose.yml that runs WordPress (so WordPress can reach Cap as http://cap:3000). Put a long random admin key in .env, e.g. CAP_ADMIN_KEY= followed by the output of openssl rand -hex 24. It is the password of Cap's dashboard."
+msgstr ""
+
+#: templates/settings.php:576
+msgid "Start it with docker compose up -d."
+msgstr ""
+
+#: templates/settings.php:577
+msgid "Open the dashboard at http://localhost:3000 on the server (e.g. through an SSH tunnel: ssh -L 3000:localhost:3000 your-server), log in with the admin key and create a site key. Copy the site key and the secret key; the secret is shown once."
+msgstr ""
+
+#: templates/settings.php:578
+msgid "Enter http://cap:3000, the site key and the secret below, test, tick \"Use Cap\" and save."
+msgstr ""
+
+#: templates/settings.php:583
+msgid "Cap is configured through NEMVO_ANALYTICS_CAP_* constants or environment variables."
+msgstr ""
+
+#: templates/settings.php:584
+#: templates/settings.php:593
+msgid "Test Cap"
+msgstr ""
+
+#: templates/settings.php:586
+msgid "Use Cap"
+msgstr ""
+
+#: templates/settings.php:588
+msgid "Cap server, as WordPress reaches it"
+msgstr ""
+
+#: templates/settings.php:589
+msgid "Public Cap address (optional)"
+msgstr ""
+
+#: templates/settings.php:589
+msgid "Only if browsers should talk to Cap directly instead of through WordPress."
+msgstr ""
+
+#: templates/settings.php:590
+msgid "Site key"
+msgstr ""
+
+#: templates/settings.php:591
+msgid "Secret key"
+msgstr ""
+
+#: templates/settings.php:591
+#: templates/settings.php:683
+#: templates/settings.php:721
+msgid "Unchanged"
+msgstr ""
+
+#: templates/settings.php:599
+msgid "Statistics are stored in the WordPress database by default, in their own tables. That is right for most sites. A separate MySQL or MariaDB database is worth it for busy sites: it keeps the WordPress database and its backups small, and the load of tracking away from your content. You can move statistics there and back at any time."
+msgstr ""
+
+#: templates/settings.php:605
+msgid "WordPress database"
+msgstr ""
+
+#: templates/settings.php:605
+msgid "External database"
+msgstr ""
+
+#: templates/settings.php:608
+msgid "In use"
+msgstr ""
+
+#: templates/settings.php:610
+msgid "Not set up"
+msgstr ""
+
+#: templates/settings.php:612
+msgid "Ready"
+msgstr ""
+
+#: templates/settings.php:612
+#: templates/settings.php:699
+msgid "Not reachable"
+msgstr ""
+
+#. translators: 1: server version, 2: rows, 3: size
+#: templates/settings.php:623
+#, php-format
+msgid "%1$s · ~%2$s rows · %3$s"
+msgstr ""
+
+#: templates/settings.php:630
+msgid "Set it up with Docker Compose, wp-config.php or the form below."
+msgstr ""
+
+#: templates/settings.php:640
+msgid "Move statistics to the external database"
+msgstr ""
+
+#: templates/settings.php:640
+msgid "Move statistics back to the WordPress database"
+msgstr ""
+
+#: templates/settings.php:645
+msgid "All visits are copied in the background while tracking continues, then the plugin switches over. The old copy is kept until you delete it."
+msgstr ""
+
+#: templates/settings.php:649
+msgid "Delete the old copy in the external database"
+msgstr ""
+
+#: templates/settings.php:649
+msgid "Delete the old copy in the WordPress database"
+msgstr ""
+
+#: templates/settings.php:653
+msgid "Create or repair tables"
+msgstr ""
+
+#: templates/settings.php:656
+msgid "Set up an external database"
+msgstr ""
+
+#: templates/settings.php:658
+msgid "With Docker Compose (recommended)"
+msgstr ""
+
+#: templates/settings.php:660
+msgid "Add a database service next to WordPress and give WordPress the NEMVO_ANALYTICS_DB_* variables. The _FILE variants read Docker secrets."
+msgstr ""
+
+#: templates/settings.php:661
+msgid "Put a long random password in secrets/analytics_db_password.txt."
+msgstr ""
+
+#: templates/settings.php:662
+msgid "Run docker compose up -d, reload this page and click \"Move statistics to the external database\"."
+msgstr ""
+
+#: templates/settings.php:665
+msgid "Using an existing MySQL or MariaDB server instead? Point NEMVO_ANALYTICS_DB_HOST at it (host:port works) and create the database and user like this:"
+msgstr ""
+
+#: templates/settings.php:669
+msgid "With wp-config.php"
+msgstr ""
+
+#: templates/settings.php:670
+msgid "Add these constants above the \"That's all, stop editing!\" line. Constants win over environment variables and over this page."
+msgstr ""
+
+#: templates/settings.php:674
+msgid "On this page"
+msgstr ""
+
+#. translators: %s: configuration source
+#: templates/settings.php:676
+#, php-format
+msgid "The external database is configured by %s, so these fields are not used."
+msgstr ""
+
+#: templates/settings.php:678
+msgid "Handy on managed hosting. The password is stored in the WordPress options table and is not shown again."
+msgstr ""
+
+#: templates/settings.php:680
+msgid "Host"
+msgstr ""
+
+#: templates/settings.php:681
+msgid "Database name"
+msgstr ""
+
+#: templates/settings.php:682
+msgid "User"
+msgstr ""
+
+#: templates/settings.php:683
+msgid "Password"
+msgstr ""
+
+#: templates/settings.php:684
+msgid "Table prefix"
+msgstr ""
+
+#: templates/settings.php:686
+#: templates/settings.php:725
+msgid "Test connection"
+msgstr ""
+
+#: templates/settings.php:687
+msgid "Save first, then move the statistics with the button above."
+msgstr ""
+
+#: templates/settings.php:694
+msgid "For traffic peaks: with the queue on, a hit only touches Valkey (or Redis) and is answered at once; a worker writes hits to the database in batches of hundreds, one transaction each. Without it, every hit writes to the database straight away, which is fine up to many thousands of visits a day."
+msgstr ""
+
+#: templates/settings.php:695
+msgid "Why Valkey and not RabbitMQ: a queue of hits needs only a fast list. Valkey is a single small container, the plugin talks to it directly with no PHP extension or library, and it can serve Cap as well. If Valkey cannot be reached, hits are written directly, so nothing is lost."
+msgstr ""
+
+#: templates/settings.php:699
+msgid "Queue on"
+msgstr ""
+
+#. translators: 1: host:port, 2: number of waiting hits, 3: time of the last worker run
+#: templates/settings.php:706
+#, php-format
+msgid "%1$s · %2$s waiting · worker last ran %3$s"
+msgstr ""
+
+#. translators: 1: host:port, 2: number of waiting hits, 3: time of the last worker run
+#: templates/settings.php:706
+msgid "never"
+msgstr ""
+
+#. translators: %s: time difference
+#: templates/settings.php:706
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: templates/settings.php:711
+msgid "Write queued hits now"
+msgstr ""
+
+#: templates/settings.php:715
+msgid "The queue is configured by NEMVO_ANALYTICS_QUEUE_URL."
+msgstr ""
+
+#: templates/settings.php:717
+msgid "Send hits through the queue"
+msgstr ""
+
+#: templates/settings.php:717
+msgid "Start the worker first (see below). Without it, WP-Cron writes queued hits once a minute."
+msgstr ""
+
+#: templates/settings.php:719
+msgid "Valkey host"
+msgstr ""
+
+#: templates/settings.php:720
+msgid "Port"
+msgstr ""
+
+#: templates/settings.php:721
+msgid "Password (optional)"
+msgstr ""
+
+#: templates/settings.php:722
+msgid "Database number"
+msgstr ""
+
+#: templates/settings.php:723
+msgid "Key prefix"
+msgstr ""
+
+#: templates/settings.php:728
+msgid "Install Valkey and the worker with Docker Compose"
+msgstr ""
+
+#: templates/settings.php:729
+msgid "The worker runs WP-CLI in a second container with the same files and settings as WordPress. Setting NEMVO_ANALYTICS_QUEUE_URL turns the queue on."
+msgstr ""
+
+#: templates/settings.php:731
+msgid "Without Docker"
+msgstr ""
+
+#: templates/settings.php:738
+msgid "No cookies, local storage or fingerprinting, so no consent banner is needed for analytics in most EU interpretations."
+msgstr ""
+
+#: templates/settings.php:739
+msgid "Visitors are counted with a hash of IP address and browser, salted with a random secret that is replaced on a schedule. Old secrets are deleted, so hashes cannot be traced back or linked over time."
+msgstr ""
+
+#: templates/settings.php:740
+msgid "IP addresses and hostnames are never stored. Screen sizes are bucketed and browser versions are dropped."
+msgstr ""
+
+#: templates/settings.php:741
+msgid "Everything stays on your own servers. Nothing is sent to third parties, and the dashboard loads nothing from other sites."
+msgstr ""
+
+#: templates/settings.php:744
+msgid "Replace the visitor salt"
+msgstr ""
+
+#: templates/settings.php:746
+msgid "Daily (most private)"
+msgstr ""
+
+#: templates/settings.php:747
+msgid "Weekly"
+msgstr ""
+
+#: templates/settings.php:748
+msgid "Monthly (better unique visitor counts over longer ranges)"
+msgstr ""
+
+#: templates/settings.php:750
+msgid "A returning visitor is recognised only within one salt period."
+msgstr ""
+
+#: templates/settings.php:752
+msgid "Keep data for (days)"
+msgstr ""
+
+#: templates/settings.php:752
+msgid "Older data is deleted every night. 395 days allows a full year-over-year comparison. 0 keeps everything."
+msgstr ""
+
+#. translators: 1: link to the privacy policy guide, 2: shortcode
+#: templates/settings.php:757
+#, php-format
+msgid "Suggested wording for your privacy policy is in the %1$s. The %2$s shortcode adds an opt-out checkbox to any page."
+msgstr ""
+
+#. translators: 1: link to the privacy policy guide, 2: shortcode
+#: templates/settings.php:757
+msgid "privacy policy guide"
+msgstr ""
+
+#: templates/settings.php:764
+msgid "Roles that can see the dashboard. Administrators always can; only administrators can change settings."
+msgstr ""
+
+#: templates/settings.php:771
+msgid "Send a weekly summary"
+msgstr ""
+
+#: templates/settings.php:771
+msgid "Sent on the first day of the week (see Settings › General) at 07:00, comparing the last 7 days with the 7 before."
+msgstr ""
+
+#: templates/settings.php:774
+msgid "Recipients"
+msgstr ""
+
+#: templates/settings.php:774
+msgid "Separate addresses with commas."
+msgstr ""
+
+#: templates/settings.php:776
+msgid "Send me the report now"
+msgstr ""
+
+#: templates/settings.php:781
+msgid "Raw pageviews can be exported as CSV from the dashboard for any date range."
+msgstr ""
+
+#: templates/settings.php:783
+msgid "Delete statistics before"
+msgstr ""
+
+#: templates/settings.php:784
+msgid "Delete"
+msgstr ""
+
+#: templates/settings.php:785
+msgid "Delete all statistics"
+msgstr ""
+
+#: templates/settings.php:789
+msgid "Delete the statistics tables when the plugin is uninstalled"
+msgstr ""
+
+#: templates/settings.php:789
+msgid "Otherwise the data is kept, so a reinstall picks up where it left off."
+msgstr ""
+
+#: templates/settings.php:794
+msgid "For developers"
+msgstr ""
+
+#: templates/settings.php:795
+msgid "Custom events"
+msgstr ""
+
+#: templates/settings.php:797
+msgid "PHP filters"
+msgstr ""
+
+#: templates/settings.php:799
+msgid "WP-CLI"
+msgstr ""
+
+#: templates/settings.php:804
+msgid "Save changes"
+msgstr ""
+
+#. translators: %s: seconds
+#: assets/js/dashboard.js:47
+#, js-format
+msgid "%ss"
+msgstr ""
+
+#. translators: 1: minutes, 2: seconds
+#: assets/js/dashboard.js:51
+#, js-format
+msgid "%1$sm %2$ss"
+msgstr ""
+
+#. translators: 1: hours, 2: minutes
+#: assets/js/dashboard.js:54
+#, js-format
+msgid "%1$sh %2$sm"
+msgstr ""
+
+#. translators: %s: first day of a week
+#: assets/js/dashboard.js:99
+#, js-format
+msgid "Week of %s"
+msgstr ""
+
+#: assets/js/dashboard.js:108
+msgid "Today"
+msgstr ""
+
+#: assets/js/dashboard.js:109
+msgid "Yesterday"
+msgstr ""
+
+#: assets/js/dashboard.js:110
+msgid "Last 7 days"
+msgstr ""
+
+#: assets/js/dashboard.js:111
+msgid "Last 30 days"
+msgstr ""
+
+#: assets/js/dashboard.js:112
+msgid "Last 90 days"
+msgstr ""
+
+#: assets/js/dashboard.js:113
+msgid "This month"
+msgstr ""
+
+#: assets/js/dashboard.js:114
+msgid "Last month"
+msgstr ""
+
+#: assets/js/dashboard.js:115
+msgid "This year"
+msgstr ""
+
+#: assets/js/dashboard.js:116
+msgid "Last 12 months"
+msgstr ""
+
+#: assets/js/dashboard.js:239
+msgid "Channel"
+msgstr ""
+
+#: assets/js/dashboard.js:240
+#: assets/js/dashboard.js:2314
+#: assets/js/dashboard.js:2395
+msgid "Source"
+msgstr ""
+
+#: assets/js/dashboard.js:241
+msgid "Referrer"
+msgstr ""
+
+#: assets/js/dashboard.js:242
+msgid "UTM source"
+msgstr ""
+
+#: assets/js/dashboard.js:243
+msgid "UTM medium"
+msgstr ""
+
+#: assets/js/dashboard.js:244
+msgid "UTM campaign"
+msgstr ""
+
+#: assets/js/dashboard.js:245
+msgid "UTM term"
+msgstr ""
+
+#: assets/js/dashboard.js:246
+msgid "UTM content"
+msgstr ""
+
+#: assets/js/dashboard.js:247
+#: assets/js/dashboard.js:318
+#: assets/js/dashboard.js:2667
+#: assets/js/dashboard.js:2945
+msgid "Page"
+msgstr ""
+
+#: assets/js/dashboard.js:248
+msgid "Entry page"
+msgstr ""
+
+#: assets/js/dashboard.js:249
+msgid "Exit page"
+msgstr ""
+
+#: assets/js/dashboard.js:250
+msgid "Content type"
+msgstr ""
+
+#: assets/js/dashboard.js:251
+msgid "Country"
+msgstr ""
+
+#: assets/js/dashboard.js:252
+msgid "Region"
+msgstr ""
+
+#: assets/js/dashboard.js:253
+msgid "City"
+msgstr ""
+
+#: assets/js/dashboard.js:254
+#: assets/js/dashboard.js:1023
+#: assets/js/dashboard.js:2399
+msgid "Language"
+msgstr ""
+
+#: assets/js/dashboard.js:255
+#: assets/js/settings.js:65
+msgid "Company"
+msgstr ""
+
+#: assets/js/dashboard.js:256
+msgid "Network type"
+msgstr ""
+
+#: assets/js/dashboard.js:257
+#: assets/js/dashboard.js:2569
+msgid "Network owner"
+msgstr ""
+
+#: assets/js/dashboard.js:258
+#: assets/js/dashboard.js:1019
+#: assets/js/dashboard.js:2314
+#: assets/js/dashboard.js:2398
+msgid "Device"
+msgstr ""
+
+#: assets/js/dashboard.js:259
+msgid "Operating system"
+msgstr ""
+
+#: assets/js/dashboard.js:260
+#: assets/js/dashboard.js:1021
+msgid "Browser"
+msgstr ""
+
+#: assets/js/dashboard.js:261
+msgid "Screen size"
+msgstr ""
+
+#: assets/js/dashboard.js:262
+msgid "Weekday"
+msgstr ""
+
+#: assets/js/dashboard.js:263
+msgid "Hour"
+msgstr ""
+
+#: assets/js/dashboard.js:264
+msgid "Goal"
+msgstr ""
+
+#: assets/js/dashboard.js:265
+msgid "Event"
+msgstr ""
+
+#: assets/js/dashboard.js:266
+msgid "Bot signal"
+msgstr ""
+
+#: assets/js/dashboard.js:267
+msgid "Visitor"
+msgstr ""
+
+#: assets/js/dashboard.js:271
+msgid "Acquisition"
+msgstr ""
+
+#: assets/js/dashboard.js:272
+msgid "Content"
+msgstr ""
+
+#: assets/js/dashboard.js:273
+#: assets/js/dashboard.js:2314
+#: assets/js/dashboard.js:2396
+#: assets/js/settings.js:61
+msgid "Location"
+msgstr ""
+
+#: assets/js/dashboard.js:274
+#: assets/js/dashboard.js:2314
+#: assets/js/dashboard.js:2397
+msgid "Organisation"
+msgstr ""
+
+#: assets/js/dashboard.js:275
+msgid "Technology"
+msgstr ""
+
+#: assets/js/dashboard.js:276
+#: assets/js/dashboard.js:848
+msgid "Time"
+msgstr ""
+
+#: assets/js/dashboard.js:283
+msgid "is not"
+msgstr ""
+
+#: assets/js/dashboard.js:288
+msgid "Organic search"
+msgstr ""
+
+#: assets/js/dashboard.js:289
+msgid "Direct"
+msgstr ""
+
+#: assets/js/dashboard.js:290
+msgid "Organic social"
+msgstr ""
+
+#: assets/js/dashboard.js:291
+msgid "Referral"
+msgstr ""
+
+#: assets/js/dashboard.js:292
+msgid "AI assistants"
+msgstr ""
+
+#: assets/js/dashboard.js:293
+msgid "Email"
+msgstr ""
+
+#: assets/js/dashboard.js:294
+msgid "Paid search"
+msgstr ""
+
+#: assets/js/dashboard.js:295
+msgid "Paid social"
+msgstr ""
+
+#: assets/js/dashboard.js:296
+msgid "Display"
+msgstr ""
+
+#: assets/js/dashboard.js:297
+msgid "Affiliates"
+msgstr ""
+
+#: assets/js/dashboard.js:298
+msgid "Other campaigns"
+msgstr ""
+
+#: assets/js/dashboard.js:302
+msgid "Desktop"
+msgstr ""
+
+#: assets/js/dashboard.js:303
+msgid "Mobile"
+msgstr ""
+
+#: assets/js/dashboard.js:304
+msgid "Tablet"
+msgstr ""
+
+#: assets/js/dashboard.js:308
+msgid "Phone (under 576 px)"
+msgstr ""
+
+#: assets/js/dashboard.js:309
+msgid "Large phone (576–767 px)"
+msgstr ""
+
+#: assets/js/dashboard.js:310
+msgid "Tablet (768–1023 px)"
+msgstr ""
+
+#: assets/js/dashboard.js:311
+msgid "Laptop (1024–1439 px)"
+msgstr ""
+
+#: assets/js/dashboard.js:312
+msgid "Desktop (1440–1919 px)"
+msgstr ""
+
+#: assets/js/dashboard.js:313
+msgid "Large desktop (1920 px and up)"
+msgstr ""
+
+#: assets/js/dashboard.js:317
+msgid "Home page"
+msgstr ""
+
+#: assets/js/dashboard.js:319
+msgid "Post"
+msgstr ""
+
+#: assets/js/dashboard.js:320
+msgid "Not found (404)"
+msgstr ""
+
+#: assets/js/dashboard.js:321
+msgid "Search results"
+msgstr ""
+
+#: assets/js/dashboard.js:322
+msgid "Category or tag"
+msgstr ""
+
+#: assets/js/dashboard.js:323
+msgid "Author archive"
+msgstr ""
+
+#: assets/js/dashboard.js:324
+msgid "Archive"
+msgstr ""
+
+#: assets/js/dashboard.js:325
+msgid "Other"
+msgstr ""
+
+#. translators: %s: short anonymous visitor id
+#: assets/js/dashboard.js:390
+#, js-format
+msgid "Visitor %s"
+msgstr ""
+
+#: assets/js/dashboard.js:396
+#: assets/js/dashboard.js:1796
+#: assets/js/dashboard.js:2786
+msgid "(none)"
+msgstr ""
+
+#: assets/js/dashboard.js:453
+msgid "The request failed."
+msgstr ""
+
+#: assets/js/dashboard.js:563
+msgid "Close"
+msgstr ""
+
+#: assets/js/dashboard.js:587
+msgid "No data for this period."
+msgstr ""
+
+#: assets/js/dashboard.js:595
+msgid "Theme: automatic"
+msgstr ""
+
+#: assets/js/dashboard.js:596
+msgid "Theme: light"
+msgstr ""
+
+#: assets/js/dashboard.js:597
+msgid "Theme: dark"
+msgstr ""
+
+#: assets/js/dashboard.js:757
+msgid "People active in the last 5 minutes"
+msgstr ""
+
+#. translators: %s: number of visitors
+#: assets/js/dashboard.js:771
+#, js-format
+msgid "%s visitor now"
+msgid_plural "%s visitors now"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dashboard.js:775
+msgid "a separate database"
+msgstr ""
+
+#: assets/js/dashboard.js:775
+msgid "the WordPress database"
+msgstr ""
+
+#. translators: %s: where statistics are stored
+#: assets/js/dashboard.js:780
+#, js-format
+msgid "Cookieless, self-hosted analytics. Statistics are stored in %s and never leave your server."
+msgstr ""
+
+#: assets/js/dashboard.js:781
+msgid "IP geolocation by DB-IP"
+msgstr ""
+
+#: assets/js/dashboard.js:829
+#: assets/js/dashboard.js:842
+#: assets/js/dashboard.js:2668
+msgid "Visits"
+msgstr ""
+
+#: assets/js/dashboard.js:831
+msgid "Views per visit"
+msgstr ""
+
+#: assets/js/dashboard.js:835
+msgid "Conversion rate"
+msgstr ""
+
+#: assets/js/dashboard.js:836
+#: assets/js/dashboard.js:989
+#: assets/js/dashboard.js:2419
+#: assets/js/dashboard.js:2683
+msgid "Time on page"
+msgstr ""
+
+#: assets/js/dashboard.js:844
+msgid "Bounce"
+msgstr ""
+
+#: assets/js/dashboard.js:845
+#: assets/js/dashboard.js:2314
+#: assets/js/dashboard.js:2392
+msgid "Duration"
+msgstr ""
+
+#: assets/js/dashboard.js:846
+msgid "Conv."
+msgstr ""
+
+#: assets/js/dashboard.js:847
+msgid "Conv. rate"
+msgstr ""
+
+#: assets/js/dashboard.js:849
+msgid "Scroll"
+msgstr ""
+
+#: assets/js/dashboard.js:850
+#: assets/js/dashboard.js:2681
+msgid "Entrances"
+msgstr ""
+
+#: assets/js/dashboard.js:851
+msgid "Exits"
+msgstr ""
+
+#: assets/js/dashboard.js:852
+#: assets/js/dashboard.js:2682
+msgid "Exit rate"
+msgstr ""
+
+#: assets/js/dashboard.js:853
+#: assets/js/dashboard.js:1010
+#: assets/js/dashboard.js:2394
+msgid "Events"
+msgstr ""
+
+#: assets/js/dashboard.js:854
+msgid "Share"
+msgstr ""
+
+#: assets/js/dashboard.js:859
+#: assets/js/dashboard.js:2534
+msgid "People"
+msgstr ""
+
+#: assets/js/dashboard.js:860
+#: assets/js/dashboard.js:2282
+#: assets/js/dashboard.js:2534
+msgid "Automated"
+msgstr ""
+
+#: assets/js/dashboard.js:861
+msgid "All traffic"
+msgstr ""
+
+#: assets/js/dashboard.js:968
+msgid "Date range and filters"
+msgstr ""
+
+#: assets/js/dashboard.js:969
+msgid "Key metrics"
+msgstr ""
+
+#: assets/js/dashboard.js:974
+msgid "Traffic sources"
+msgstr ""
+
+#: assets/js/dashboard.js:976
+msgid "Channels"
+msgstr ""
+
+#: assets/js/dashboard.js:977
+#: assets/js/dashboard.js:2855
+msgid "Sources"
+msgstr ""
+
+#: assets/js/dashboard.js:978
+msgid "Referrers"
+msgstr ""
+
+#: assets/js/dashboard.js:979
+msgid "Campaigns"
+msgstr ""
+
+#: assets/js/dashboard.js:984
+#: assets/js/dashboard.js:2314
+#: assets/js/dashboard.js:2393
+msgid "Pages"
+msgstr ""
+
+#: assets/js/dashboard.js:987
+msgid "Entry pages"
+msgstr ""
+
+#: assets/js/dashboard.js:988
+msgid "Exit pages"
+msgstr ""
+
+#: assets/js/dashboard.js:989
+msgid "Average engaged time on your 30 most visited pages."
+msgstr ""
+
+#: assets/js/dashboard.js:999
+msgid "Organisations visiting from their own network or an office line. Click one to see its visits."
+msgstr ""
+
+#: assets/js/dashboard.js:1000
+msgid "Network types"
+msgstr ""
+
+#: assets/js/dashboard.js:1001
+msgid "Providers"
+msgstr ""
+
+#: assets/js/dashboard.js:1003
+msgid "No companies identified in this period."
+msgstr ""
+
+#: assets/js/dashboard.js:1003
+msgid "Install the free network database under Settings › Companies & networks to see who visits."
+msgstr ""
+
+#: assets/js/dashboard.js:1007
+msgid "Goals & events"
+msgstr ""
+
+#: assets/js/dashboard.js:1017
+msgid "Devices"
+msgstr ""
+
+#: assets/js/dashboard.js:1020
+msgid "OS"
+msgstr ""
+
+#: assets/js/dashboard.js:1022
+msgid "Screen"
+msgstr ""
+
+#: assets/js/dashboard.js:1119
+msgid "Custom range"
+msgstr ""
+
+#: assets/js/dashboard.js:1126
+msgid "Compare with"
+msgstr ""
+
+#: assets/js/dashboard.js:1128
+msgid "vs. previous period"
+msgstr ""
+
+#: assets/js/dashboard.js:1129
+msgid "vs. same period last year"
+msgstr ""
+
+#: assets/js/dashboard.js:1130
+msgid "No comparison"
+msgstr ""
+
+#: assets/js/dashboard.js:1136
+msgid "Traffic"
+msgstr ""
+
+#: assets/js/dashboard.js:1137
+msgid "Crawlers, scrapers, spam and fake hits"
+msgstr ""
+
+#: assets/js/dashboard.js:1147
+msgid "Edit filter"
+msgstr ""
+
+#. translators: %s: filter description
+#: assets/js/dashboard.js:1158
+#, js-format
+msgid "Remove filter %s"
+msgstr ""
+
+#: assets/js/dashboard.js:1170
+msgid "Previous period"
+msgstr ""
+
+#: assets/js/dashboard.js:1172
+msgid "Next period"
+msgstr ""
+
+#: assets/js/dashboard.js:1180
+msgid "Filter"
+msgstr ""
+
+#: assets/js/dashboard.js:1181
+msgid "Clear all"
+msgstr ""
+
+#: assets/js/dashboard.js:1183
+msgid "Raw pageviews for this period as CSV"
+msgstr ""
+
+#: assets/js/dashboard.js:1183
+msgid "Export"
+msgstr ""
+
+#: assets/js/dashboard.js:1214
+#: assets/js/dashboard.js:2565
+msgid "From"
+msgstr ""
+
+#: assets/js/dashboard.js:1215
+msgid "To"
+msgstr ""
+
+#: assets/js/dashboard.js:1216
+msgid "Apply"
+msgstr ""
+
+#: assets/js/dashboard.js:1286
+msgid "Start typing…"
+msgstr ""
+
+#: assets/js/dashboard.js:1314
+msgid "Dimension"
+msgstr ""
+
+#: assets/js/dashboard.js:1315
+msgid "Condition"
+msgstr ""
+
+#: assets/js/dashboard.js:1316
+msgid "Value"
+msgstr ""
+
+#: assets/js/dashboard.js:1317
+msgid "Update filter"
+msgstr ""
+
+#: assets/js/dashboard.js:1317
+msgid "Add filter"
+msgstr ""
+
+#: assets/js/dashboard.js:1327
+msgid "Tracking is paused, so no new visits are recorded."
+msgstr ""
+
+#: assets/js/dashboard.js:1327
+msgid "Turn it back on"
+msgstr ""
+
+#: assets/js/dashboard.js:1330
+msgid "Showing automated traffic only: crawlers, scrapers, spam and fake hits. Open a visit in the visit log to see why it was flagged."
+msgstr ""
+
+#: assets/js/dashboard.js:1333
+msgid "No visits in this period yet. Logged-in administrators and editors are not counted by default: open the site in a private window to see your own visit under Realtime."
+msgstr ""
+
+#. translators: %s: number of setup issues
+#: assets/js/dashboard.js:1339
+#, js-format
+msgid "%s setup issue"
+msgid_plural "%s setup issues"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dashboard.js:1353
+msgid "Dismiss"
+msgstr ""
+
+#. translators: %s: change in percentage points
+#: assets/js/dashboard.js:1377
+#, js-format
+msgid "%s pp"
+msgstr ""
+
+#. translators: %s: value in the comparison period
+#: assets/js/dashboard.js:1386
+#, js-format
+msgid "Comparison period: %s"
+msgstr ""
+
+#: assets/js/dashboard.js:1391
+msgid "up"
+msgstr ""
+
+#: assets/js/dashboard.js:1391
+msgid "down"
+msgstr ""
+
+#. translators: %s: conversion rate
+#: assets/js/dashboard.js:1406
+#, js-format
+msgid "%s of visits"
+msgstr ""
+
+#. translators: %s: average scroll depth
+#: assets/js/dashboard.js:1409
+#, js-format
+msgid "%s scrolled"
+msgstr ""
+
+#. translators: %s: minutes (chart axis)
+#: assets/js/dashboard.js:1484
+#, js-format
+msgid "%sm"
+msgstr ""
+
+#: assets/js/dashboard.js:1499
+#: assets/js/dashboard.js:1500
+msgid "Show chart"
+msgstr ""
+
+#: assets/js/dashboard.js:1499
+#: assets/js/dashboard.js:1500
+msgid "Show as table"
+msgstr ""
+
+#: assets/js/dashboard.js:1523
+msgid "Metric"
+msgstr ""
+
+#: assets/js/dashboard.js:1528
+msgid "Hours"
+msgstr ""
+
+#: assets/js/dashboard.js:1528
+msgid "Days"
+msgstr ""
+
+#: assets/js/dashboard.js:1528
+msgid "Weeks"
+msgstr ""
+
+#: assets/js/dashboard.js:1528
+msgid "Months"
+msgstr ""
+
+#: assets/js/dashboard.js:1531
+msgid "Interval"
+msgstr ""
+
+#: assets/js/dashboard.js:1568
+msgid "Period"
+msgstr ""
+
+#: assets/js/dashboard.js:1568
+msgid "Comparison"
+msgstr ""
+
+#: assets/js/dashboard.js:1644
+msgid "Use the arrow keys to read values."
+msgstr ""
+
+#: assets/js/dashboard.js:1663
+msgid "Click to zoom in"
+msgstr ""
+
+#: assets/js/dashboard.js:1724
+msgid "Where visitors came from and went next"
+msgstr ""
+
+#. translators: %s: page path
+#: assets/js/dashboard.js:1726
+#, js-format
+msgid "Page journey for %s"
+msgstr ""
+
+#: assets/js/dashboard.js:1731
+#: assets/js/dashboard.js:2415
+#: assets/js/dashboard.js:2677
+msgid "Open the page"
+msgstr ""
+
+#: assets/js/dashboard.js:1785
+msgid "All events"
+msgstr ""
+
+#: assets/js/dashboard.js:1787
+msgid "Only visits with this event"
+msgstr ""
+
+#: assets/js/dashboard.js:1793
+msgid "Label"
+msgstr ""
+
+#: assets/js/dashboard.js:1807
+msgid "No goals are set up yet."
+msgstr ""
+
+#: assets/js/dashboard.js:1809
+msgid "Add a goal"
+msgstr ""
+
+#: assets/js/dashboard.js:1834
+msgid "Open"
+msgstr ""
+
+#. translators: 1: rows shown, 2: total rows
+#: assets/js/dashboard.js:1845
+#: assets/js/dashboard.js:2054
+#, js-format
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: assets/js/dashboard.js:1846
+#: assets/js/dashboard.js:2055
+msgid "Details"
+msgstr ""
+
+#. translators: %s: number of visits
+#: assets/js/dashboard.js:1920
+#, js-format
+msgid "%s visit"
+msgid_plural "%s visits"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dashboard.js:1920
+msgid "Click to filter"
+msgstr ""
+
+#: assets/js/dashboard.js:1952
+msgid "World"
+msgstr ""
+
+#: assets/js/dashboard.js:1953
+msgid "Europe"
+msgstr ""
+
+#: assets/js/dashboard.js:1954
+msgid "Nordics"
+msgstr ""
+
+#: assets/js/dashboard.js:1955
+msgid "Americas"
+msgstr ""
+
+#: assets/js/dashboard.js:1956
+msgid "Asia-Pacific"
+msgstr ""
+
+#: assets/js/dashboard.js:1972
+msgid "Regions"
+msgstr ""
+
+#: assets/js/dashboard.js:1973
+msgid "Cities"
+msgstr ""
+
+#: assets/js/dashboard.js:1976
+#: assets/js/dashboard.js:1979
+msgid "Locations"
+msgstr ""
+
+#: assets/js/dashboard.js:1996
+msgid "Map view"
+msgstr ""
+
+#: assets/js/dashboard.js:2050
+msgid "No regions or cities yet. They need the city edition of the IP database or a CDN that sends location headers."
+msgstr ""
+
+#: assets/js/dashboard.js:2081
+msgid "Visitors by country. The list next to the map has the same numbers."
+msgstr ""
+
+#: assets/js/dashboard.js:2120
+#: assets/js/dashboard.js:2915
+msgid "visitor"
+msgid_plural "visitors"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dashboard.js:2120
+#: assets/js/dashboard.js:2150
+msgid "No visits"
+msgstr ""
+
+#. translators: %s: share of visits
+#: assets/js/dashboard.js:2122
+#, js-format
+msgid "%s of visits · click to filter"
+msgstr ""
+
+#: assets/js/dashboard.js:2151
+msgid "Click a country to filter"
+msgstr ""
+
+#: assets/js/dashboard.js:2159
+msgid "When people visit"
+msgstr ""
+
+#. translators: 1: weekday, 2: hour
+#: assets/js/dashboard.js:2179
+#, js-format
+msgid "Busiest: %1$s around %2$s. Times are in the site’s time zone; click a cell to filter."
+msgstr ""
+
+#: assets/js/dashboard.js:2206
+msgid "Visits by weekday and hour. A table view is available."
+msgstr ""
+
+#. translators: %s: share of all visits
+#: assets/js/dashboard.js:2236
+msgid "visit"
+msgid_plural "visits"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: share of all visits
+#: assets/js/dashboard.js:2236
+#, js-format
+msgid "%s of all visits · click to filter"
+msgstr ""
+
+#: assets/js/dashboard.js:2255
+msgid "Fewer"
+msgstr ""
+
+#: assets/js/dashboard.js:2257
+msgid "More visits"
+msgstr ""
+
+#. translators: %s: bot score from 0 to 100
+#: assets/js/dashboard.js:2282
+#, js-format
+msgid "Bot score %s"
+msgstr ""
+
+#: assets/js/dashboard.js:2294
+msgid "Visit log"
+msgstr ""
+
+#: assets/js/dashboard.js:2298
+#: assets/js/dashboard.js:2744
+msgid "Load more"
+msgstr ""
+
+#: assets/js/dashboard.js:2301
+msgid "Individual visits, newest first. Click one to see its pages, time on each page, events and how it was classified."
+msgstr ""
+
+#: assets/js/dashboard.js:2314
+msgid "Started"
+msgstr ""
+
+#: assets/js/dashboard.js:2331
+msgid "Reached a goal"
+msgstr ""
+
+#. translators: 1: visits shown, 2: total visits
+#: assets/js/dashboard.js:2356
+#, js-format
+msgid "Showing %1$s of %2$s visits"
+msgstr ""
+
+#: assets/js/dashboard.js:2370
+msgid "Visit"
+msgstr ""
+
+#. translators: 1: time on page, 2: scroll depth
+#: assets/js/dashboard.js:2422
+#, js-format
+msgid "%1$s · scrolled %2$s"
+msgstr ""
+
+#: assets/js/dashboard.js:2435
+msgid "No signals either way."
+msgstr ""
+
+#: assets/js/dashboard.js:2444
+msgid "Pages and events"
+msgstr ""
+
+#: assets/js/dashboard.js:2450
+msgid "Classification"
+msgstr ""
+
+#: assets/js/dashboard.js:2456
+#: assets/js/dashboard.js:2601
+msgid "automated"
+msgstr ""
+
+#: assets/js/dashboard.js:2456
+msgid "a person"
+msgstr ""
+
+#: assets/js/dashboard.js:2459
+msgid "Drill down"
+msgstr ""
+
+#. translators: %s: company name
+#: assets/js/dashboard.js:2463
+#, js-format
+msgid "All visits from %s"
+msgstr ""
+
+#: assets/js/dashboard.js:2464
+msgid "All visits by this visitor"
+msgstr ""
+
+#. translators: %s: network owner, e.g. an internet provider
+#: assets/js/dashboard.js:2465
+#, js-format
+msgid "All visits via %s"
+msgstr ""
+
+#: assets/js/dashboard.js:2466
+msgid "Visits that started on the same page"
+msgstr ""
+
+#: assets/js/dashboard.js:2470
+msgid "Same visitor, other visits"
+msgstr ""
+
+#. translators: %s: number of pages
+#: assets/js/dashboard.js:2488
+#, js-format
+msgid "%s page"
+msgid_plural "%s pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dashboard.js:2493
+msgid "Visitors are only recognised within one salt period (a day by default)."
+msgstr ""
+
+#: assets/js/dashboard.js:2524
+msgid "Back to people"
+msgstr ""
+
+#: assets/js/dashboard.js:2524
+msgid "Show automated traffic on the dashboard"
+msgstr ""
+
+#. translators: %s: share of all visits
+#: assets/js/dashboard.js:2534
+#, js-format
+msgid "%s of all visits"
+msgstr ""
+
+#: assets/js/dashboard.js:2535
+msgid "Automated visits per day. They are kept out of every other number on this dashboard."
+msgstr ""
+
+#: assets/js/dashboard.js:2541
+msgid "Why"
+msgstr ""
+
+#: assets/js/dashboard.js:2548
+#: assets/js/dashboard.js:2581
+msgid "No automated visits in this period."
+msgstr ""
+
+#: assets/js/dashboard.js:2555
+msgid "Who"
+msgstr ""
+
+#: assets/js/dashboard.js:2559
+msgid "User agent"
+msgstr ""
+
+#: assets/js/dashboard.js:2562
+#: assets/js/dashboard.js:2572
+msgid "Nothing yet."
+msgstr ""
+
+#: assets/js/dashboard.js:2584
+msgid "Automated visits per day"
+msgstr ""
+
+#: assets/js/dashboard.js:2601
+msgid "people"
+msgstr ""
+
+#: assets/js/dashboard.js:2601
+msgid "Click to see that day"
+msgstr ""
+
+#: assets/js/dashboard.js:2650
+msgid "Page journey"
+msgstr ""
+
+#: assets/js/dashboard.js:2657
+msgid "Entered the site here"
+msgstr ""
+
+#: assets/js/dashboard.js:2658
+msgid "Left the site"
+msgstr ""
+
+#: assets/js/dashboard.js:2673
+msgid "No data"
+msgstr ""
+
+#: assets/js/dashboard.js:2686
+msgid "Came from"
+msgstr ""
+
+#: assets/js/dashboard.js:2686
+msgid "Went to"
+msgstr ""
+
+#: assets/js/dashboard.js:2700
+msgid "Filter the dashboard by this page"
+msgstr ""
+
+#: assets/js/dashboard.js:2731
+#: assets/js/dashboard.js:2732
+msgid "Search"
+msgstr ""
+
+#: assets/js/dashboard.js:2745
+msgid "Download CSV"
+msgstr ""
+
+#. translators: 1: rows shown, 2: total rows
+#: assets/js/dashboard.js:2812
+#, js-format
+msgid "Showing %1$s of %2$s"
+msgstr ""
+
+#: assets/js/dashboard.js:2812
+msgid "Nothing found."
+msgstr ""
+
+#: assets/js/dashboard.js:2854
+msgid "Active pages"
+msgstr ""
+
+#: assets/js/dashboard.js:2857
+msgid "Organisations"
+msgstr ""
+
+#: assets/js/dashboard.js:2859
+msgid "Latest activity"
+msgstr ""
+
+#: assets/js/dashboard.js:2872
+msgid "People on the site right now"
+msgstr ""
+
+#: assets/js/dashboard.js:2874
+msgid "Active in the last 5 minutes. Automated traffic is left out."
+msgstr ""
+
+#: assets/js/dashboard.js:2877
+msgid "Pageviews per minute, last 30 minutes"
+msgstr ""
+
+#: assets/js/dashboard.js:2898
+msgid "Pageviews per minute"
+msgstr ""
+
+#: assets/js/dashboard.js:2906
+msgid "30 min ago"
+msgstr ""
+
+#: assets/js/dashboard.js:2906
+msgid "15 min ago"
+msgstr ""
+
+#: assets/js/dashboard.js:2906
+msgid "now"
+msgstr ""
+
+#: assets/js/dashboard.js:2915
+msgid "pageview"
+msgid_plural "pageviews"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dashboard.js:2928
+msgid "just now"
+msgstr ""
+
+#. translators: %s: minutes
+#: assets/js/dashboard.js:2931
+#, js-format
+msgid "%s min ago"
+msgstr ""
+
+#. translators: %s: time of the last update
+#: assets/js/dashboard.js:2938
+#, js-format
+msgid "Updated %s"
+msgstr ""
+
+#: assets/js/dashboard.js:2948
+msgid "Nobody right now."
+msgstr ""
+
+#: assets/js/dashboard.js:2981
+msgid "No activity in the last 30 minutes."
+msgstr ""
+
+#: assets/js/dashboard.js:3019
+msgid "Check the database settings"
+msgstr ""
+
+#: assets/js/settings.js:60
+msgid "Address"
+msgstr ""
+
+#: assets/js/settings.js:62
+msgid "Network"
+msgstr ""
+
+#: assets/js/settings.js:63
+msgid "Hostname"
+msgstr ""
+
+#: assets/js/settings.js:66
+msgid "Lookup time"
+msgstr ""
+
+#. translators: %d: milliseconds
+#: assets/js/settings.js:66
+#, js-format
+msgid "%d ms"
+msgstr ""
+
+#: assets/js/settings.js:108
+msgid "Replace the statistics in the target database with the current ones?"
+msgstr ""
+
+#: assets/js/settings.js:164
+msgid "Pick a date first."
+msgstr ""
+
+#. translators: %s: a date.
+#: assets/js/settings.js:167
+#, js-format
+msgid "Delete all statistics recorded before %s? This cannot be undone."
+msgstr ""
+
+#: assets/js/settings.js:173
+msgid "Delete ALL statistics? This cannot be undone."
+msgstr ""
+
+#: assets/js/settings.js:179
+msgid "Delete the old copy of the statistics? The copy in use is not touched."
+msgstr ""
+
+#: assets/js/settings.js:202
+msgid "Working…"
+msgstr ""
+
+#. translators: %s: progress message.
+#: assets/js/settings.js:217
+#, js-format
+msgid "A move was interrupted (%s). Click to continue."
+msgstr ""
+
+#: assets/js/settings.js:230
+msgid "Copied"
+msgstr ""

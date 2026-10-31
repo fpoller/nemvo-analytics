@@ -1,0 +1,33 @@
+{
+	"name": "Nemvo Analytics (WordPress)",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "wordpress",
+	"runServices": [
+		"wordpress",
+		"worker",
+		"db",
+		"statsdb",
+		"valkey",
+		"cap",
+		"mailpit",
+		"adminer"
+	],
+	"workspaceFolder": "/workspace",
+	"overrideCommand": false,
+	"shutdownAction": "stopCompose",
+	"postCreateCommand": "bash /workspace/.devcontainer/setup.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"bmewburn.vscode-intelephense-client",
+				"EditorConfig.EditorConfig"
+			],
+			"settings": {
+				"intelephense.environment.includePaths": [
+					"/var/www/html"
+				],
+				"intelephense.environment.phpVersion": "8.3.0"
+			}
+		}
+	}
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="Nemvo Analytics">
+	<description>WordPress Coding Standards for Nemvo Analytics.</description>
+	<file>./nemvo-analytics</file>
+	<exclude-pattern>*/assets/vendor/*</exclude-pattern>
+	<exclude-pattern>*.min.js</exclude-pattern>
+	<arg name="extensions" value="php"/>
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_supported_wp_version" value="6.2"/>
+	<rule ref="WordPress"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="nemvo-analytics"/>
+		</properties>
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array" value="nemvo_analytics,NemvoAnalytics,NEMVO_ANALYTICS"/>
+		</properties>
+	</rule>
+</ruleset>
