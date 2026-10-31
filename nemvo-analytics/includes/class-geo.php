@@ -102,14 +102,19 @@ class Geo {
 		if ( ! Settings::get( 'network_lookup' ) ) {
 			return $out;
 		}
-		$record = self::lookup( 'asn', $ip );
-		$asn    = (int) ( $record['autonomous_system_number'] ?? 0 );
-		$org    = (string) ( $record['autonomous_system_organization'] ?? '' );
-		$host   = '';
-		if ( $hostname && Settings::get( 'rdns_lookup' ) && Network::needs_hostname( $asn, $org ) ) {
-			$host = Dns::reverse( $ip );
+		try {
+			$record = self::lookup( 'asn', $ip );
+			$asn    = (int) ( $record['autonomous_system_number'] ?? 0 );
+			$org    = (string) ( $record['autonomous_system_organization'] ?? '' );
+			$host   = '';
+			if ( $hostname && Settings::get( 'rdns_lookup' ) && Network::needs_hostname( $asn, $org ) ) {
+				$host = Dns::reverse( $ip );
+			}
+			$net = Network::classify( $asn, $org, $host );
+		} catch ( \Throwable $e ) {
+			// A lookup problem must never cost the hit itself.
+			return $out;
 		}
-		$net = Network::classify( $asn, $org, $host );
 		return array(
 			'asn'      => $asn,
 			'provider' => mb_substr( (string) $net['provider'], 0, 100 ),

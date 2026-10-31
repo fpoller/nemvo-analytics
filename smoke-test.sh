@@ -79,7 +79,7 @@ status=$(curl -s -o /dev/null -w '%{http_code}' -A "$ua" -H 'Accept-Language: sv
 	--data "{\"t\":\"pv\",\"id\":\"$pv\",\"u\":\"$url/smoke/?utm_source=smoke\",\"r\":\"https://www.google.com/\",\"ti\":\"Smoke\",\"w\":1440,\"tz\":\"Europe/Stockholm\",\"l\":\"sv-SE\",\"b\":0,\"c\":{\"type\":\"page\",\"id\":0}}" "$url/wp-json/nemvo/v1/e")
 expect "pageview accepted ($status)" "$([ "$status" = 200 ] && echo 1)"
 curl -s -o /dev/null -A "$ua" -H 'Content-Type: text/plain' --data "{\"t\":\"e\",\"id\":\"$pv\",\"d\":15000,\"s\":80,\"i\":1}" "$url/wp-json/nemvo/v1/e"
-row=$(wp eval '$db = NemvoAnalytics\DB::conn(); echo $db->get_var( "SELECT CONCAT(country, \"|\", channel, \"|\", duration, \"|\", bot_score) FROM " . NemvoAnalytics\DB::table( "sessions" ) . " LIMIT 1" );')
+row=$(wp eval '$db = NemvoAnalytics\DB::conn(); echo $db->get_var( "SELECT CONCAT(country, \"|\", channel, \"|\", duration, \"|\", bot_score) FROM " . NemvoAnalytics\DB::table( "sessions" ) . " WHERE utm_source = \"smoke\"" );')
 expect "visit stored in the WordPress database: $row" "$([ "$row" = 'SE|Organic Search|15|0' ] && echo 1)"
 nonce=$(curl -s -b "$jar" "$url/wp-admin/admin-ajax.php?action=rest-nonce")
 today=$(wp eval 'echo current_datetime()->format("Y-m-d");')
@@ -87,6 +87,8 @@ batch=$(curl -s -b "$jar" -H "X-WP-Nonce: $nonce" -H 'Content-Type: application/
 	--data "{\"requests\":[{\"route\":\"overview\",\"params\":{\"from\":\"$today\",\"to\":\"$today\"}},{\"route\":\"breakdown\",\"params\":{\"dim\":\"source\"}},{\"route\":\"sessions\",\"params\":{}},{\"route\":\"bots\",\"params\":{}},{\"route\":\"realtime\",\"params\":{}}]}" \
 	"$url/wp-json/nemvo/v1/stats/batch")
 expect "reports answer: $(cut -c1-80 <<<"$batch")" "$(grep -c '"visits":1' <<<"$batch" | sed 's/^[1-9][0-9]*$/1/')"
+bots=$(wp eval '$db = NemvoAnalytics\DB::conn(); echo $db->get_var( "SELECT COUNT(*) FROM " . NemvoAnalytics\DB::table( "sessions" ) . " WHERE browser = \"curl\" AND bot_score >= 50" );')
+expect "page requests without JavaScript are recorded on the server as automated ($bots)" "$([ "${bots:-0}" -ge 1 ] && echo 1)"
 
 echo "== Plugin Check (errors only)"
 wp plugin install plugin-check --activate >/dev/null 2>&1

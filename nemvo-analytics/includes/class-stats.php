@@ -826,8 +826,12 @@ class Stats {
 		$events = $db->get_results( $db->prepare( "SELECT pv, created_at, name, label, meta, path FROM `$e` WHERE session_id = %d ORDER BY id LIMIT 500", $id ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery
 		$labels = Bot::labels();
 		$flags  = array();
-		foreach ( Bot::weights() as $flag => $weight ) {
-			if ( (int) $session['bot_flags'] & $flag ) {
+		$session_flags = (int) $session['bot_flags'];
+		if ( $session_flags & Bot::JS ) {
+			$session_flags &= ~Bot::NO_JS;
+		}
+		foreach ( array_filter( Bot::weights() ) as $flag => $weight ) {
+			if ( $session_flags & $flag ) {
 				$flags[] = array(
 					'flag'   => $flag,
 					'label'  => $labels[ $flag ],

@@ -31,6 +31,8 @@ class Bot {
 	const INTERACTION = 1024;
 	const POW         = 2048;
 	const CAP         = 4096;
+	const NO_JS       = 8192;
+	const JS          = 16384;
 
 	/**
 	 * Weight per signal.
@@ -42,8 +44,9 @@ class Bot {
 			self::UA_BOT      => 100,
 			self::HEADLESS    => 90,
 			self::NO_CLIENT   => 60,
+			self::NO_JS       => 50,
 			self::REF_SPAM    => 60,
-			self::DATACENTER  => 40,
+			self::DATACENTER  => 30,
 			self::RATE        => 60,
 			self::ANOMALY     => 30,
 			self::NO_LANGUAGE => 30,
@@ -52,6 +55,7 @@ class Bot {
 			self::INTERACTION => -30,
 			self::POW         => -15,
 			self::CAP         => -60,
+			self::JS          => 0,
 		);
 	}
 
@@ -65,6 +69,8 @@ class Bot {
 			self::UA_BOT      => __( 'Crawler or tool user agent', 'nemvo-analytics' ),
 			self::HEADLESS    => __( 'Automated browser', 'nemvo-analytics' ),
 			self::NO_CLIENT   => __( 'Hit sent without the tracker', 'nemvo-analytics' ),
+			self::NO_JS       => __( 'Did not run JavaScript', 'nemvo-analytics' ),
+			self::JS          => __( 'Ran the tracker', 'nemvo-analytics' ),
 			self::REF_SPAM    => __( 'Referrer spam', 'nemvo-analytics' ),
 			self::DATACENTER  => __( 'Datacenter or VPN network', 'nemvo-analytics' ),
 			self::RATE        => __( 'Too many pages too fast', 'nemvo-analytics' ),
@@ -85,6 +91,10 @@ class Bot {
 	 * @return int 0-100.
 	 */
 	public static function score( $flags ) {
+		// A page request counts as "no JavaScript" only until the tracker confirms it.
+		if ( $flags & self::JS ) {
+			$flags &= ~self::NO_JS;
+		}
 		$score = 0;
 		foreach ( self::weights() as $flag => $weight ) {
 			if ( $flags & $flag ) {
@@ -109,9 +119,10 @@ class Bot {
 	 * @param string $ua      User agent.
 	 * @param array  $data    Hit payload.
 	 * @param array  $headers Lowercase request headers (name => value).
+	 * @param bool   $page    The page request itself (not a tracker hit).
 	 * @return int Bitmask.
 	 */
-	public static function request_flags( $ua, array $data, array $headers ) {
+	public static function request_flags( $ua, array $data, array $headers, $page = false ) {
 		$flags = 0;
 		if ( User_Agent::is_bot( $ua ) ) {
 			$flags |= self::UA_BOT;
@@ -122,16 +133,25 @@ class Bot {
 		if ( '' === trim( (string) ( $headers['accept_language'] ?? '' ) ) ) {
 			$flags |= self::NO_LANGUAGE;
 		}
-		// Browsers from 2023 on send Fetch Metadata with every beacon and fetch.
-		$site = (string) ( $headers['sec_fetch_site'] ?? '' );
-		if ( '' === $site ? self::modern_browser( $ua ) : ! in_array( $site, array( 'same-origin', 'same-site' ), true ) ) {
-			$flags |= self::FETCH_META;
+		// Browsers from 2023 on send Fetch Metadata with every navigation, beacon and fetch.
+		if ( $page ) {
+			if ( '' === (string) ( $headers['sec_fetch_mode'] ?? '' ) && self::modern_browser( $ua ) ) {
+				$flags |= self::FETCH_META;
+			}
+		} else {
+			$site = (string) ( $headers['sec_fetch_site'] ?? '' );
+			if ( '' === $site ? self::modern_browser( $ua ) : ! in_array( $site, array( 'same-origin', 'same-site' ), true ) ) {
+				$flags |= self::FETCH_META;
+			}
 		}
 
 		// Browser checks reported by the tracker; a hit without them was not sent by it.
-		if ( ! isset( $data['b'] ) ) {
+		if ( $page ) {
+			$flags |= self::NO_JS;
+		} elseif ( ! isset( $data['b'] ) ) {
 			$flags |= self::NO_CLIENT;
 		} else {
+			$flags |= self::JS;
 			$client = absint( $data['b'] );
 			if ( $client & ( 1 | 16 ) ) {
 				$flags |= self::HEADLESS;

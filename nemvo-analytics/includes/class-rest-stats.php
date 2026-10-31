@@ -52,6 +52,7 @@ class Rest_Stats {
 			'/admin/queue-test'    => array( 'POST', 'queue_test', $manage ),
 			'/admin/queue-work'    => array( 'POST', 'queue_work', $manage ),
 			'/admin/cap-test'      => array( 'POST', 'cap_test', $manage ),
+			'/admin/diagnostics'   => array( 'POST', 'diagnostics', $manage ),
 		);
 		foreach ( self::REPORTS as $route => $callback ) {
 			$routes[ '/stats/' . $route ] = array( 'GET', $callback, $view );
@@ -627,6 +628,35 @@ class Rest_Stats {
 				'ok'      => true,
 				/* translators: %s: number of hits */
 				'message' => sprintf( __( '%s hits written.', 'nemvo-analytics' ), number_format_i18n( $n ) ),
+			)
+		);
+	}
+
+	/**
+	 * Check tracking: { action: start|status|stop }. Start runs the server-side
+	 * checks and opens the live log for 30 minutes.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response
+	 */
+	public static function diagnostics( \WP_REST_Request $request ) {
+		$action = (string) $request->get_param( 'action' );
+		$checks = null;
+		if ( 'start' === $action ) {
+			Diagnostics::toggle( true );
+			$checks = Diagnostics::checks();
+		} elseif ( 'stop' === $action ) {
+			Diagnostics::toggle( false );
+		}
+		$env = get_option( Health::OPTION, array() );
+		return rest_ensure_response(
+			array(
+				'ok'        => true,
+				'active'    => Diagnostics::active(),
+				'minutes'   => Diagnostics::active() ? (int) ceil( ( (int) $env['diag_until'] - time() ) / 60 ) : 0,
+				'checks'    => $checks,
+				'log'       => Diagnostics::entries(),
+				'threshold' => Bot::threshold(),
 			)
 		);
 	}

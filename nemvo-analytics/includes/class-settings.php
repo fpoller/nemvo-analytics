@@ -40,6 +40,7 @@ class Settings {
 			'tracking_enabled'    => 1,
 			'exclude_roles'       => array( 'administrator', 'editor' ),
 			'respect_dnt'         => 1,
+			'server_hits'         => 1,
 			'exclude_ips'         => '',
 			'exclude_paths'       => '',
 			'session_timeout'     => 30,
@@ -53,7 +54,7 @@ class Settings {
 			'download_extensions' => 'pdf,doc,docx,xls,xlsx,ppt,pptx,odt,ods,zip,rar,7z,gz,csv,txt,epub,dmg,exe,msi,pkg,mp3,mp4,mov',
 			'inline_script'       => 1,
 			'salt_rotation'       => 'daily',
-			'trust_proxy'         => 0,
+			'trust_proxy'         => 'auto',
 			'geo_headers'         => 1,
 			'geo_timezone'        => 1,
 			'geo_mmdb_path'       => '',
@@ -197,6 +198,7 @@ class Settings {
 		$flags = array(
 			'tracking_enabled',
 			'respect_dnt',
+			'server_hits',
 			'track_outbound',
 			'track_downloads',
 			'track_forms',
@@ -205,7 +207,6 @@ class Settings {
 			'track_search',
 			'track_scroll',
 			'inline_script',
-			'trust_proxy',
 			'geo_headers',
 			'geo_timezone',
 			'geo_auto_update',
@@ -234,6 +235,7 @@ class Settings {
 		$ext                        = array_filter( array_map( 'trim', explode( ',', (string) preg_replace( '/[^a-z0-9,]/', '', $ext ) ) ) );
 		$out['download_extensions'] = $ext ? implode( ',', array_unique( $ext ) ) : $defaults['download_extensions'];
 
+		$out['trust_proxy']   = in_array( $input['trust_proxy'] ?? '', array( 'auto', 'always', 'never' ), true ) ? $input['trust_proxy'] : 'auto';
 		$out['salt_rotation'] = in_array( $input['salt_rotation'] ?? '', array( 'daily', 'weekly', 'monthly' ), true ) ? $input['salt_rotation'] : 'daily';
 		$out['geo_precision'] = in_array( $input['geo_precision'] ?? '', array( 'country', 'region', 'city' ), true ) ? $input['geo_precision'] : 'city';
 		$out['geo_mmdb_path'] = sanitize_text_field( $input['geo_mmdb_path'] ?? '' );

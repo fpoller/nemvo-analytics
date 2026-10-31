@@ -307,6 +307,10 @@ class Queue {
 	 */
 	private static function connect( array $cfg ) {
 		$host = $cfg['host'];
+		if ( ! function_exists( 'stream_socket_client' ) ) {
+			self::$error = __( 'This server does not allow socket connections (stream_socket_client is disabled).', 'nemvo-analytics' );
+			return false;
+		}
 		$addr = 0 === strpos( $host, '/' ) ? 'unix://' . $host : 'tcp://' . $host . ':' . (int) $cfg['port'];
 		$sock = @stream_socket_client( $addr, $errno, $errstr, 0.5 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- reported through $errstr.
 		if ( ! $sock ) {

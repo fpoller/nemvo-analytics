@@ -8,6 +8,7 @@ Self-hosted, cookieless web analytics for WordPress, with company identification
 
 - **The usual reports.** Visitors, visits, pageviews, duration, bounce rate, time on page, scroll depth and conversions, compared with the previous period or the same period last year. You also get traffic sources and UTM campaigns, top, entry and exit pages, page journeys, a world map, devices, a weekday × hour heatmap, goals and events.
 - **Who visits.** Every visit's network is looked up locally. Organisations with their own network are named. On internet-provider networks, reverse DNS tells an office line (`fw.acme.se` → *acme.se*) from a home line, so you can see when a prospect's office reads your pricing page.
+- **Server hits and JavaScript together.** Every page request is recorded on the server and matched with the tracker's hit, so bots and visitors without JavaScript are counted, and nothing twice.
 - **People and bots, separated.** Nothing is blocked. Every visit gets a bot score from request, network, browser and behaviour signals, plus an optional proof of work: built in, or a self-hosted [Cap](https://capjs.js.org) server. The dashboard shows people by default and can switch to automated traffic, listing what was filtered out and why.
 - **Drill down anywhere.** Every chart point, map country, heatmap cell and table row filters the whole dashboard. The visit log opens single visits with their pages, time on each page, events and classification.
 - **Private by design.** No cookies, no local storage and no fingerprinting. Visitors are counted with a daily-salted hash, and IP addresses and hostnames are never stored.
@@ -107,7 +108,9 @@ Each piece is optional: leave out the services and variables you don't need. The
 ## How it works
 
 ```
-browser ── tracker.js (inline, ~3 KB) ──► POST /wp-json/nemvo/v1/e
+page request ─► template_redirect: recorded on the server (pageview id P)
+                │  the page carries P to the tracker
+browser ── tracker.js (inline, ~3 KB) ──► POST /wp-json/nemvo/v1/e  (pageview P)
                                              │  validate, attribute source, parse device,
                                              │  locate (IP database or time zone), network + company,
                                              │  bot signals; the IP stays in memory only
@@ -119,6 +122,7 @@ browser ── tracker.js (inline, ~3 KB) ──► POST /wp-json/nemvo/v1/e
                                                                    sessions, pageviews, events
 ```
 
+- **Server and browser, matched.** Every page request is recorded on the server before the page is sent. The tracker's hit carries the same pageview id and confirms that pageview: it adds time on page, scroll, screen and human signals, and removes the "did not run JavaScript" signal. A cached copy of a page re-used by someone else gets a new id, so nobody's pageviews are merged.
 - **Visitors** are a SHA-256 hash of a rotating secret salt, the site, the IP address and the user agent. The salt changes daily by default, so a visitor is only recognised within one day.
 - **Sessions** end after 30 minutes without activity. A single-page visit counts as engaged (not a bounce) after 10 seconds of attention, an event, or a second page.
 - **Engaged time** only counts while the tab is visible and the visitor was active in the last five minutes.

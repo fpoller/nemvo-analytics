@@ -34,21 +34,34 @@ class Health {
 	 * @param array $headers Request headers (lowercase, underscores).
 	 */
 	public static function note_request( array $headers ) {
-		if ( Settings::get( 'trust_proxy' ) ) {
+		// Only a problem when the visitor's own address is not known.
+		$header = self::proxy_header( $headers );
+		if ( Privacy::is_public( Privacy::client_ip() ) || ( '' === $header && 'never' !== Privacy::proxy_mode() ) ) {
 			return;
 		}
+		$header = '' === $header ? 'none' : $header;
+		$env = get_option( self::OPTION, array() );
+		$env = is_array( $env ) ? $env : array();
+		if ( empty( $env['proxy'] ) || time() - (int) $env['proxy'] > HOUR_IN_SECONDS ) {
+			$env['proxy']        = time();
+			$env['proxy_header'] = $header;
+			update_option( self::OPTION, $env, true );
+		}
+	}
+
+	/**
+	 * The forwarding header a proxy or CDN added to a request, if any.
+	 *
+	 * @param array $headers Request headers (lowercase, underscores).
+	 * @return string Header name, or ''.
+	 */
+	public static function proxy_header( array $headers ) {
 		foreach ( array( 'cf_connecting_ip', 'true_client_ip', 'fastly_client_ip', 'x_real_ip', 'x_forwarded_for' ) as $header ) {
 			if ( ! empty( $headers[ $header ] ) ) {
-				$env = get_option( self::OPTION, array() );
-				$env = is_array( $env ) ? $env : array();
-				if ( empty( $env['proxy'] ) || time() - (int) $env['proxy'] > HOUR_IN_SECONDS ) {
-					$env['proxy']        = time();
-					$env['proxy_header'] = str_replace( '_', '-', $header );
-					update_option( self::OPTION, $env, true );
-				}
-				return;
+				return str_replace( '_', '-', $header );
 			}
 		}
+		return '';
 	}
 
 	/**
@@ -121,12 +134,14 @@ class Health {
 		}
 
 		$env = get_option( self::OPTION, array() );
-		if ( ! $s['trust_proxy'] && ! empty( $env['proxy'] ) && time() - (int) $env['proxy'] < 7 * DAY_IN_SECONDS ) {
+		if ( ! empty( $env['proxy'] ) && time() - (int) $env['proxy'] < 7 * DAY_IN_SECONDS ) {
 			$out[] = array(
 				'warning',
-				/* translators: %s: header name */
-				sprintf( __( 'A proxy or CDN sits in front of the site (%s header seen)', 'nemvo-analytics' ), $env['proxy_header'] ?? '' ),
-				__( 'Visitors then share the proxy\'s address: they count as fewer people, and location and company lookups fail. If you control the proxy, turn on "Trust proxy headers" under Geolocation. Otherwise, run the site without it.', 'nemvo-analytics' ),
+				__( 'Visitor addresses are hidden behind a proxy', 'nemvo-analytics' ),
+				'none' === ( $env['proxy_header'] ?? '' )
+					? __( 'Hits arrive from a private address without a forwarded visitor address, so all visitors look the same and location and company lookups fail. Make the reverse proxy send X-Forwarded-For or X-Real-IP.', 'nemvo-analytics' )
+					/* translators: %s: header name */
+					: sprintf( __( 'Hits carry a %s header, but forwarded addresses are not trusted. Set "Forwarded visitor addresses" under Geolocation to Automatic or Always.', 'nemvo-analytics' ), $env['proxy_header'] ),
 				'geo',
 			);
 		}

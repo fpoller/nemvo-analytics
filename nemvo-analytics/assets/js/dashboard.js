@@ -864,6 +864,7 @@
 	const state = { range: '30d', from: '', to: '', compare: 'previous', metric: 'visitors', interval: '', traffic: 'human', filters: [] };
 	const cur = { from: '', to: '' };
 	let overview = null;
+	let botTotals = null;
 	let overviewPromise = Promise.resolve(null);
 	let overviewGen = 0;
 	let lastKey = '';
@@ -1329,8 +1330,11 @@
 		if ('bot' === state.traffic) {
 			notes.push(['info', __('Showing automated traffic only: crawlers, scrapers, spam and fake hits. Open a visit in the visit log to see why it was flagged.', 'nemvo-analytics'), null]);
 		}
-		if (overview && !overview.current.visits && !state.filters.length && 'human' === state.traffic) {
-			notes.push(['info', __('No visits in this period yet. Logged-in administrators and editors are not counted by default: open the site in a private window to see your own visit under Realtime.', 'nemvo-analytics'), null]);
+		if (overview && !overview.current.visits && 'human' === state.traffic && botTotals && botTotals.bots > 0) {
+			/* translators: %s: number of automated visits */
+			notes.push(['warning', sprintf(_n('No visits by people in this period, but %s automated visit. Automated traffic is kept out of these numbers.', 'No visits by people in this period, but %s automated visits. Automated traffic is kept out of these numbers.', botTotals.bots, 'nemvo-analytics'), fmt.full(botTotals.bots)), ['#' + hashFor(Object.assign({}, state, { traffic: 'bot' })), __('Show automated traffic', 'nemvo-analytics')]]);
+		} else if (overview && !overview.current.visits && !state.filters.length && 'human' === state.traffic) {
+			notes.push(['info', __('No visits in this period yet. Logged-in administrators and editors are not counted, and private windows in Firefox and Brave send a privacy signal this site respects. Check tracking (under Settings) shows what happens to each visit.', 'nemvo-analytics'), cfg.canManage ? [cfg.settingsUrl + '#setup', __('Check tracking', 'nemvo-analytics')] : null]);
 		}
 		const issues = (cfg.warnings || []).filter((w) => 'tracking' !== w[3] || cfg.tracking);
 		const issueKey = issues.map((w) => w[1]).join('|');
@@ -2014,9 +2018,10 @@
 						text: MAP_VIEWS[k][0],
 						onclick: () => {
 							panel.view = k;
+							panel.current = k;
 							store.set('map-view', k);
-							draw();
 							paintViews();
+							draw();
 						},
 					})
 				)
@@ -2626,7 +2631,9 @@
 				.then((res) => {
 					if (gen === panel.gen) {
 						last = res;
+						botTotals = res[0];
 						draw();
+						renderNotices();
 					}
 				})
 				.catch((err) => gen === panel.gen && put(shell.body, errorNote(err)))

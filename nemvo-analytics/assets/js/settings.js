@@ -218,6 +218,145 @@
 		}
 	}
 
+	/* Check tracking: server-side checks, then a live log of incoming hits. */
+	var diag = document.getElementById('nva-diag');
+	var diagTimer = 0;
+	var HITS = {
+		req: __('Page request (server)', 'nemvo-analytics'),
+		pv: __('Tracker pageview', 'nemvo-analytics'),
+		e: __('Engagement', 'nemvo-analytics'),
+		ev: __('Event', 'nemvo-analytics'),
+		v: __('Verification', 'nemvo-analytics'),
+		'': __('Request', 'nemvo-analytics')
+	};
+
+	function cell(text, cls) {
+		var td = document.createElement('td');
+		td.textContent = text;
+		if (cls) {
+			td.className = cls;
+		}
+		return td;
+	}
+
+	function renderDiag(data) {
+		var checks = diag.querySelector('.nva-diag__checks');
+		var live = diag.querySelector('.nva-diag__live');
+		var tbody = diag.querySelector('.nva-diag__log tbody');
+		if (data.checks) {
+			checks.replaceChildren.apply(checks, data.checks.map(function (c) {
+				var li = document.createElement('li');
+				li.className = 'is-' + c[0];
+				var badge = document.createElement('span');
+				badge.className = 'nva-badge is-' + c[0];
+				badge.textContent = c[0] === 'good' ? '✓' : '!';
+				var body = document.createElement('div');
+				var strong = document.createElement('strong');
+				strong.textContent = c[1];
+				body.append(strong);
+				if (c[2]) {
+					var p = document.createElement('p');
+					p.textContent = c[2];
+					body.append(p);
+				}
+				li.append(badge, body, document.createElement('span'));
+				return li;
+			}));
+			checks.hidden = false;
+		}
+		live.hidden = !data.active && !data.log.length;
+		diag.querySelector('[data-nva-action="diag-stop"]').hidden = !data.active;
+		diag.querySelector('.nva-diag__status').textContent = data.active
+			? sprintf(/* translators: %d: minutes left */ __('Listening for %d more minutes. Open your site in another browser or a private window and click around; each hit appears here within seconds.', 'nemvo-analytics'), data.minutes)
+			: __('Stopped.', 'nemvo-analytics');
+		if (!data.log.length) {
+			var empty = document.createElement('tr');
+			var td = cell(data.active ? __('Waiting for the first hit…', 'nemvo-analytics') : __('No hits were received.', 'nemvo-analytics'), 'nva-muted');
+			td.colSpan = 4;
+			empty.append(td);
+			tbody.replaceChildren(empty);
+			return;
+		}
+		tbody.replaceChildren.apply(tbody, data.log.map(function (e) {
+			var tr = document.createElement('tr');
+			var result;
+			var cls;
+			if (e.outcome === 'ignored') {
+				result = __('Ignored', 'nemvo-analytics');
+				cls = 'is-bad';
+			} else if ((e.type === 'pv' || e.type === 'req') && Number(e.score) >= data.threshold) {
+				// translators: %s: bot score.
+				result = sprintf(__('Stored as automated (score %s)', 'nemvo-analytics'), e.score);
+				cls = 'is-warn';
+			} else if (e.type === 'pv' || e.type === 'req') {
+				// translators: %s: bot score.
+				result = sprintf(__('Stored as a person (score %s)', 'nemvo-analytics'), e.score || 0);
+				cls = 'is-good';
+			} else {
+				result = e.outcome === 'queued' ? __('Queued', 'nemvo-analytics') : __('Received', 'nemvo-analytics');
+				cls = 'is-good';
+			}
+			var details = [];
+			if (e.why) {
+				details.push(e.why + (e.host ? ' (' + e.host + ')' : ''));
+			}
+			if (e.path) {
+				details.push(e.path);
+			}
+			if ((e.type === 'pv' || e.type === 'req') && e.outcome !== 'ignored') {
+				details.push([e.company, e.network, e.provider, e.country, e.browser].filter(Boolean).join(' · '));
+				if (e.signals) {
+					// translators: %s: list of bot signals.
+					details.push(sprintf(__('Signals: %s', 'nemvo-analytics'), e.signals));
+				}
+			}
+			if (e.type === 'e') {
+				details.push(e.interaction === '1' ? __('with mouse, touch or keyboard use', 'nemvo-analytics') : __('no mouse, touch or keyboard use yet', 'nemvo-analytics'));
+			}
+			tr.append(cell(sprintf(/* translators: %s: time difference */ __('%s ago', 'nemvo-analytics'), e.when)), cell(HITS[e.type] || e.type), cell(result, 'nva-diag__result ' + cls), cell(details.filter(Boolean).join(' — ')));
+			return tr;
+		}));
+	}
+
+	function pollDiag() {
+		clearTimeout(diagTimer);
+		post('/admin/diagnostics', { action: 'status' }).then(function (data) {
+			renderDiag(data);
+			if (data.active) {
+				diagTimer = setTimeout(pollDiag, 4000);
+			}
+		}).catch(function () {
+			diagTimer = setTimeout(pollDiag, 10000);
+		});
+	}
+
+	if (diag) {
+		diag.addEventListener('click', function (e) {
+			var button = e.target.closest('[data-nva-action^="diag-"]');
+			if (!button) {
+				return;
+			}
+			e.stopPropagation();
+			var start = button.getAttribute('data-nva-action') === 'diag-start';
+			button.disabled = true;
+			show(button, true, start ? __('Checking the home page and sending a test hit…', 'nemvo-analytics') : '');
+			post('/admin/diagnostics', { action: start ? 'start' : 'stop' }).then(function (data) {
+				show(button, true, '');
+				renderDiag(data);
+				if (data.active) {
+					diagTimer = setTimeout(pollDiag, 4000);
+				}
+			}).catch(function (err) {
+				show(button, false, err.message);
+			}).then(function () {
+				button.disabled = false;
+			});
+		}, true);
+		if (cfg.diag) {
+			pollDiag();
+		}
+	}
+
 	/* Copy buttons on code samples. */
 	document.addEventListener('click', function (e) {
 		var button = e.target.closest('[data-nva-copy]');

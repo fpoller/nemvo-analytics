@@ -54,7 +54,12 @@ services:
     ports:
       - "${WP_PORT:-8090}:80"
     environment: *wp-env
-    volumes: *wp-volumes
+    volumes:
+      - wordpress:/var/www/html
+      - ../nemvo-analytics:/var/www/html/wp-content/plugins/nemvo-analytics
+      - ./mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ..:/workspace:cached
+      - ./apache-dev-port.conf:/etc/apache2/sites-enabled/001-dev-port.conf:ro
 
   # Writes queued hits in batches (only does work while the queue is on).
   worker:

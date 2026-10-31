@@ -163,6 +163,9 @@ class Dns {
 	 * @return string|null Response, or null on timeout/error.
 	 */
 	private static function exchange( $server, $packet, $id, $timeout ) {
+		if ( ! function_exists( 'stream_socket_client' ) ) {
+			return null;
+		}
 		$address = false !== strpos( $server, ':' ) ? '[' . $server . ']' : $server;
 		$errno   = 0;
 		$errstr  = '';

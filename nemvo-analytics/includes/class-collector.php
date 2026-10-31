@@ -65,22 +65,30 @@ class Collector {
 	public static function handle( \WP_REST_Request $request ) {
 		$response = self::empty_response();
 		if ( ! Settings::get( 'tracking_enabled' ) ) {
+			Diagnostics::log( '', 'ignored', 'tracking_off' );
 			return $response;
 		}
 		$body = (string) $request->get_body();
-		if ( '' === $body || strlen( $body ) > self::MAX_BODY ) {
+		$data = '' === $body || strlen( $body ) > self::MAX_BODY ? null : json_decode( $body, true );
+		// The tracker stopped in the browser; it only says so while "Check tracking" runs.
+		if ( is_array( $data ) && 'x' === ( $data['t'] ?? '' ) ) {
+			$reason = in_array( $data['r'] ?? '', array( 'gpc', 'dnt', 'ignore', 'error' ), true ) ? $data['r'] : 'error';
+			Diagnostics::log( 'pv', 'ignored', 'client_' . $reason, array( 'path' => isset( $data['m'] ) ? sanitize_text_field( (string) $data['m'] ) : '' ) );
 			return $response;
 		}
-		$data = json_decode( $body, true );
-		if ( ! is_array( $data ) || empty( $data['t'] ) || ! in_array( $data['t'], array( 'pv', 'e', 'ev', 'v' ), true ) ) {
+		$pv   = is_array( $data ) && isset( $data['id'] ) && is_string( $data['id'] ) && preg_match( '/^[a-f0-9]{16}$/', $data['id'] ) ? $data['id'] : '';
+		if ( '' === $pv || empty( $data['t'] ) || ! in_array( $data['t'], array( 'pv', 'e', 'ev', 'v' ), true ) ) {
+			Diagnostics::log( '', 'ignored', 'payload' );
 			return $response;
 		}
-		$pv = isset( $data['id'] ) && is_string( $data['id'] ) && preg_match( '/^[a-f0-9]{16}$/', $data['id'] ) ? $data['id'] : '';
-		if ( '' === $pv || Privacy::opted_out() ) {
+		$signal = Privacy::opt_out_signal();
+		if ( '' !== $signal ) {
+			Diagnostics::log( $data['t'], 'ignored', $signal );
 			return $response;
 		}
 		$ip = Privacy::client_ip();
 		if ( Privacy::ip_excluded( $ip ) ) {
+			Diagnostics::log( $data['t'], 'ignored', 'ip' );
 			return $response;
 		}
 		$ua      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 512 ) : '';
@@ -91,13 +99,16 @@ class Collector {
 			$headers[ $name ] = is_array( $values ) ? (string) reset( $values ) : (string) $values;
 		}
 		Health::note_request( $headers );
+		// A private address is a proxy's, not the visitor's: it says nothing about their network or location.
+		$lookup_ip = Privacy::is_public( $ip ) ? $ip : '';
 
 		switch ( $data['t'] ) {
 			case 'pv':
-				$hit = self::pageview( $data, $pv, $visitor, $now, $ip, $ua, $headers );
-				return $hit ? self::store_pageview( $hit, $ip ) : $response;
+				$hit = self::pageview( $data, $pv, $visitor, $now, $lookup_ip, $ua, $headers );
+				return $hit ? self::store_pageview( $hit, $lookup_ip ) : $response;
 
 			case 'e':
+				Diagnostics::log( 'e', Queue::enabled() ? 'queued' : 'stored', '', array( 'interaction' => empty( $data['i'] ) ? 0 : 1, 'seconds' => isset( $data['d'] ) ? round( absint( $data['d'] ) / 1000 ) : 0 ) );
 				self::defer(
 					array(
 						't'      => 'e',
@@ -113,6 +124,7 @@ class Collector {
 			case 'ev':
 				$name = isset( $data['n'] ) ? mb_substr( sanitize_text_field( (string) $data['n'] ), 0, 64 ) : '';
 				if ( '' !== $name && ! in_array( $name, self::PASSIVE_EVENTS, true ) ) {
+					Diagnostics::log( 'ev', Queue::enabled() ? 'queued' : 'stored', '', array( 'path' => $name ) );
 					self::defer(
 						array(
 							't'     => 'ev',
@@ -132,6 +144,7 @@ class Collector {
 				} elseif ( isset( $data['c'], $data['n'] ) && is_string( $data['c'] ) && is_string( $data['n'] ) ) {
 					$flags = Pow::verify( $data['c'], $data['n'], $pv ) ? Bot::POW : 0;
 				}
+				Diagnostics::log( 'v', $flags ? 'stored' : 'ignored', $flags ? '' : 'payload', array( 'path' => $flags & Bot::CAP ? 'Cap' : __( 'proof of work', 'nemvo-analytics' ) ) );
 				if ( $flags ) {
 					if ( Queue::enabled() ) {
 						Queue::mark( 'ok', $visitor, 60 * (int) Settings::get( 'session_timeout' ) );
@@ -163,13 +176,15 @@ class Collector {
 	 * @param array  $headers Request headers.
 	 * @return array|null
 	 */
-	private static function pageview( array $data, $pv, $visitor, $now, $ip, $ua, array $headers ) {
+	private static function pageview( array $data, $pv, $visitor, $now, $ip, $ua, array $headers, $page = false ) {
 		$parts = wp_parse_url( isset( $data['u'] ) ? (string) $data['u'] : '' );
 		if ( ! $parts || empty( $parts['host'] ) || ! self::host_allowed( $parts['host'] ) ) {
+			Diagnostics::log( 'pv', 'ignored', 'host', array( 'host' => $parts['host'] ?? '' ) );
 			return null;
 		}
 		$path = self::clean_path( $parts['path'] ?? '/' );
 		if ( Privacy::path_excluded( $path ) ) {
+			Diagnostics::log( 'pv', 'ignored', 'path', array( 'path' => $path ) );
 			return null;
 		}
 		$params = array();
@@ -180,7 +195,7 @@ class Collector {
 		$referrer = isset( $data['r'] ) ? (string) $data['r'] : '';
 		$is_404   = ! empty( $ctx['nf'] );
 		$agent    = User_Agent::parse( $ua, ! empty( $data['tp'] ) );
-		$flags    = Bot::request_flags( $ua, $data, $headers );
+		$flags    = Bot::request_flags( $ua, $data, $headers, $page );
 		if ( $flags & ( Bot::UA_BOT | Bot::HEADLESS ) ) {
 			$agent['browser'] = User_Agent::bot_name( $ua );
 		}
@@ -213,6 +228,77 @@ class Collector {
 	}
 
 	/**
+	 * Record the current page request on the server (template_redirect), so
+	 * every view counts even when the browser never runs the tracker. The
+	 * tracker then sends the returned id with its own hit, which confirms
+	 * and completes this pageview instead of adding another one.
+	 *
+	 * Written without the reverse DNS lookup (that happens when the tracker
+	 * confirms), so serving the page only costs a few small queries.
+	 *
+	 * @return string Pageview id for the tracker, or '' when not recorded.
+	 */
+	public static function server_hit() {
+		$method  = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : 'get';
+		$purpose = isset( $_SERVER['HTTP_SEC_PURPOSE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_SEC_PURPOSE'] ) ) : ( isset( $_SERVER['HTTP_PURPOSE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_PURPOSE'] ) ) : '' );
+		// Prefetched and prerendered pages count when (and if) they are shown, through the tracker.
+		if ( 'get' !== $method || false !== stripos( $purpose, 'prefetch' ) || false !== stripos( $purpose, 'prerender' ) ) {
+			return '';
+		}
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '/';
+		$path = self::clean_path( (string) wp_parse_url( $uri, PHP_URL_PATH ) );
+		$signal = Privacy::opt_out_signal();
+		if ( '' !== $signal ) {
+			Diagnostics::log( 'req', 'ignored', $signal, array( 'path' => $path ) );
+			return '';
+		}
+		$ip = Privacy::client_ip();
+		if ( Privacy::ip_excluded( $ip ) ) {
+			Diagnostics::log( 'req', 'ignored', 'ip', array( 'path' => $path ) );
+			return '';
+		}
+		$ua      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 512 ) : '';
+		$lang    = isset( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_ACCEPT_LANGUAGE'] ) ) : '';
+		$headers = array(
+			'accept_language' => $lang,
+			'sec_fetch_mode'  => isset( $_SERVER['HTTP_SEC_FETCH_MODE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_SEC_FETCH_MODE'] ) ) : '',
+		);
+		$origin  = (string) preg_replace( '#^(https?://[^/]+).*$#', '$1', home_url() );
+		$pv      = bin2hex( random_bytes( 8 ) );
+		$data    = array(
+			'u'  => $origin . $uri,
+			'r'  => isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
+			'ti' => wp_get_document_title(),
+			'l'  => trim( (string) strtok( $lang, ',;' ) ),
+			'c'  => Tracker::context(),
+		);
+		$hit     = self::pageview( $data, $pv, Privacy::visitor_hash( $ip, $ua ), current_time( 'mysql' ), Privacy::is_public( $ip ) ? $ip : '', $ua, $headers, true );
+		if ( ! $hit ) {
+			return '';
+		}
+		$queued = Queue::enabled() && Queue::push( $hit );
+		$stored = $queued || Processor::process( array( $hit ) );
+		if ( Diagnostics::active() ) {
+			$flags = Processor::$flags[ $pv ] ?? $hit['flags'];
+			Diagnostics::log(
+				'req',
+				$stored ? ( $queued ? 'queued' : 'stored' ) : 'ignored',
+				$stored ? '' : 'database',
+				array(
+					'path'     => $hit['path'],
+					'score'    => Bot::score( $flags ),
+					'flags'    => $flags,
+					'network'  => $hit['net']['network'] ?? '',
+					'provider' => $hit['net']['provider'] ?? '',
+					'country'  => $hit['geo']['country'] ?? '',
+					'browser'  => $hit['agent']['browser'] ?? '',
+				)
+			);
+		}
+		return $stored ? $pv : '';
+	}
+
+	/**
 	 * Write or queue a pageview and tell the tracker whether to verify.
 	 *
 	 * @param array  $hit Hit.
@@ -230,29 +316,56 @@ class Collector {
 			$verified = Queue::has( 'ok', $hit['visitor'] );
 			$queued   = Queue::push( $hit );
 		}
+		$original = $hit['pv'];
+		$flags    = $hit['flags'] | ( 'hosting' === ( $hit['net']['network'] ?? '' ) ? Bot::DATACENTER : 0 );
 		if ( ! $queued ) {
-			Processor::process(
+			$enriched = $hit;
+			$stored   = Processor::process(
 				array( $hit ),
-				static function ( $h ) use ( $ip ) {
+				static function ( $h ) use ( $ip, &$enriched ) {
 					$h['net'] = Geo::network( $ip, true );
+					$enriched = $h;
 					return $h;
 				}
 			);
-			$verified = (bool) ( ( Processor::$flags[ $hit['pv'] ] ?? 0 ) & ( Bot::POW | Bot::CAP ) );
+			$hit      = $enriched;
+			$flags    = Processor::$flags[ $original ] ?? $flags;
+			$verified = (bool) ( $flags & ( Bot::POW | Bot::CAP ) );
+			if ( ! $stored ) {
+				Diagnostics::log( 'pv', 'ignored', 'database', array( 'path' => $hit['path'] ) );
+			}
+		}
+		if ( Diagnostics::active() ) {
+			Diagnostics::log(
+				'pv',
+				$queued ? 'queued' : 'stored',
+				'',
+				array(
+					'path'     => $hit['path'],
+					'score'    => Bot::score( $flags ),
+					'flags'    => $flags,
+					'network'  => $hit['net']['network'] ?? '',
+					'provider' => $hit['net']['provider'] ?? '',
+					'company'  => $hit['net']['company'] ?? '',
+					'country'  => $hit['geo']['country'] ?? '',
+					'browser'  => $hit['agent']['browser'] ?? '',
+				)
+			);
 		}
 
-		if ( $verified || $hit['flags'] & Bot::UA_BOT ) {
-			return self::empty_response();
+		// A cached copy of a page carried someone else's pageview id: the tracker continues with its own.
+		$id    = Processor::$renamed[ $original ] ?? '';
+		$reply = '' !== $id ? array( 'id' => $id ) : array();
+		if ( ! $verified && ! ( $hit['flags'] & Bot::UA_BOT ) ) {
+			if ( Cap::enabled() ) {
+				$reply['v'] = 'cap';
+			} elseif ( Settings::get( 'pow_enabled' ) ) {
+				$reply['v'] = 'pow';
+				$reply['c'] = Pow::challenge( '' !== $id ? $id : $hit['pv'] );
+				$reply['b'] = Pow::BITS;
+			}
 		}
-		if ( Cap::enabled() ) {
-			$reply = array( 'v' => 'cap' );
-		} elseif ( Settings::get( 'pow_enabled' ) ) {
-			$reply = array(
-				'v' => 'pow',
-				'c' => Pow::challenge( $hit['pv'] ),
-				'b' => Pow::BITS,
-			);
-		} else {
+		if ( ! $reply ) {
 			return self::empty_response();
 		}
 		$response = new \WP_REST_Response( $reply, 200 );

@@ -72,26 +72,70 @@ class Privacy {
 	}
 
 	/**
-	 * Client IP. Proxy headers are only honoured when explicitly enabled,
-	 * otherwise anyone could spoof them.
+	 * How forwarded headers (X-Forwarded-For and friends) are treated.
+	 *
+	 * @return string auto|always|never
+	 */
+	public static function proxy_mode() {
+		$mode = Settings::get( 'trust_proxy' );
+		if ( 1 === $mode || '1' === $mode || 'always' === $mode ) {
+			return 'always';
+		}
+		return 'never' === $mode ? 'never' : 'auto';
+	}
+
+	/**
+	 * Client IP. Forwarded headers can be faked by anyone, so they are used
+	 * only when the connection comes from a proxy: always, never, or (auto)
+	 * when the connecting address is a private one, like a reverse proxy on
+	 * the same network (Nginx Proxy Manager, Traefik, Caddy...).
 	 *
 	 * @return string
 	 */
 	public static function client_ip() {
-		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-		if ( Settings::get( 'trust_proxy' ) ) {
-			foreach ( array( 'HTTP_CF_CONNECTING_IP', 'HTTP_TRUE_CLIENT_IP', 'HTTP_X_REAL_IP', 'HTTP_X_FORWARDED_FOR' ) as $header ) {
-				if ( empty( $_SERVER[ $header ] ) ) {
-					continue;
-				}
-				$candidate = trim( explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) )[0] );
-				if ( filter_var( $candidate, FILTER_VALIDATE_IP ) ) {
-					$ip = $candidate;
-					break;
+		$remote = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$mode   = self::proxy_mode();
+		if ( 'never' === $mode || ( 'auto' === $mode && self::is_public( $remote ) ) ) {
+			return $remote;
+		}
+		$forwarded = self::forwarded_ip();
+		return '' !== $forwarded ? $forwarded : $remote;
+	}
+
+	/**
+	 * The visitor address a proxy passed on: CDN headers first, then the
+	 * right-most public address in X-Forwarded-For (the one the nearest proxy
+	 * saw), then X-Real-IP.
+	 *
+	 * @return string Empty when there is none.
+	 */
+	public static function forwarded_ip() {
+		foreach ( array( 'HTTP_CF_CONNECTING_IP', 'HTTP_TRUE_CLIENT_IP', 'HTTP_FASTLY_CLIENT_IP' ) as $header ) {
+			$ip = isset( $_SERVER[ $header ] ) ? trim( sanitize_text_field( wp_unslash( $_SERVER[ $header ] ) ) ) : '';
+			if ( self::is_public( $ip ) ) {
+				return $ip;
+			}
+		}
+		if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			$chain = array_reverse( array_map( 'trim', explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) ) );
+			foreach ( $chain as $ip ) {
+				if ( self::is_public( $ip ) ) {
+					return $ip;
 				}
 			}
 		}
-		return $ip;
+		$ip = isset( $_SERVER['HTTP_X_REAL_IP'] ) ? trim( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_REAL_IP'] ) ) ) : '';
+		return self::is_public( $ip ) ? $ip : '';
+	}
+
+	/**
+	 * Whether an address is a public one (not private, loopback or reserved).
+	 *
+	 * @param string $ip Address.
+	 * @return bool
+	 */
+	public static function is_public( $ip ) {
+		return '' !== $ip && false !== filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
 	}
 
 	/**
@@ -100,12 +144,22 @@ class Privacy {
 	 * @return bool
 	 */
 	public static function opted_out() {
+		return '' !== self::opt_out_signal();
+	}
+
+	/**
+	 * Which privacy signal the browser sent, when they are respected.
+	 *
+	 * @return string gpc, dnt or ''.
+	 */
+	public static function opt_out_signal() {
 		if ( ! Settings::get( 'respect_dnt' ) ) {
-			return false;
+			return '';
 		}
-		$dnt = isset( $_SERVER['HTTP_DNT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_DNT'] ) ) : '';
-		$gpc = isset( $_SERVER['HTTP_SEC_GPC'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_SEC_GPC'] ) ) : '';
-		return '1' === $dnt || '1' === $gpc;
+		if ( isset( $_SERVER['HTTP_SEC_GPC'] ) && '1' === sanitize_text_field( wp_unslash( $_SERVER['HTTP_SEC_GPC'] ) ) ) {
+			return 'gpc';
+		}
+		return isset( $_SERVER['HTTP_DNT'] ) && '1' === sanitize_text_field( wp_unslash( $_SERVER['HTTP_DNT'] ) ) ? 'dnt' : '';
 	}
 
 	/**

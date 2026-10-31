@@ -166,6 +166,7 @@ class Admin {
 					'root'      => esc_url_raw( rest_url( Collector::NS ) ),
 					'nonce'     => wp_create_nonce( 'wp_rest' ),
 					'migration' => Migration::state() ? Migration::progress( Migration::state() ) : null,
+					'diag'      => Diagnostics::active(),
 				)
 			);
 			return;

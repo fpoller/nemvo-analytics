@@ -15,9 +15,17 @@ defined( 'ABSPATH' ) || exit;
 class Tracker {
 
 	/**
+	 * Id of the pageview recorded on the server for this request.
+	 *
+	 * @var string
+	 */
+	private static $pv = '';
+
+	/**
 	 * Hook in.
 	 */
 	public static function init() {
+		add_action( 'template_redirect', array( __CLASS__, 'record_request' ), 9999 );
 		add_action( 'wp_footer', array( __CLASS__, 'output' ), 99 );
 		add_shortcode( 'nemvo_analytics_optout', array( __CLASS__, 'optout' ) );
 	}
@@ -84,11 +92,21 @@ class Tracker {
 	}
 
 	/**
+	 * Record the page request on the server (after redirects have happened).
+	 */
+	public static function record_request() {
+		if ( ! Settings::get( 'server_hits' ) || ! self::should_track() || is_feed() || is_robots() || is_favicon() || is_trackback() || is_embed() || get_query_var( 'sitemap' ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return;
+		}
+		self::$pv = Collector::server_hit();
+	}
+
+	/**
 	 * Page context the browser cannot know.
 	 *
 	 * @return array
 	 */
-	private static function context() {
+	public static function context() {
 		$ctx = array(
 			'type' => 'other',
 			'id'   => 0,
@@ -134,6 +152,8 @@ class Tracker {
 			'scroll'    => (bool) Settings::get( 'track_scroll' ),
 			'ctx'       => self::context(),
 			'cap'       => Cap::enabled() ? Cap::client_config() : null,
+			'diag'      => Diagnostics::active(),
+			'pv'        => self::$pv,
 		);
 
 		$json = wp_json_encode( $config );

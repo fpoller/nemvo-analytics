@@ -4,7 +4,7 @@ Tags: analytics, statistics, privacy, bot detection, b2b
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -36,9 +36,13 @@ It is made for sites that want Google Analytics-style reports without Google, wi
 
 Each visit's network is looked up in a free ASN database (DB-IP, downloaded when you click). Organisations with their own network are named directly. For connections from an internet provider, a reverse DNS lookup tells an office line (for example fw.acme.se, which names the company) from a home line. The IP address and hostname are never stored; only the network owner, its type and the company name or domain are.
 
+= Server-side and in the browser =
+
+Every page request is recorded on the server as it is served, so visits that never run JavaScript are counted too. The small tracker then confirms the same page view and adds what only the browser knows: time on page, scroll depth, screen size, events and signs of a real person. The two are matched by a page view id, so nothing is counted twice.
+
 = Automated traffic =
 
-Nothing is blocked and nothing is lost: every visit is recorded with a bot score and the signals behind it. The dashboard shows people by default and can switch to automated traffic or everything. Signals include crawler user agents, automated browsers, hits sent without the tracker, referrer spam, datacenter networks, impossible browsing speed and missing browser headers on one side, and real mouse, touch or keyboard use and a solved proof of work on the other.
+Nothing is blocked and nothing is lost: every visit is recorded with a bot score and the signals behind it. The dashboard shows people by default and can switch to automated traffic or everything. Signals include crawler user agents, automated browsers, page requests that never run JavaScript, hits sent without the tracker, referrer spam, datacenter networks, impossible browsing speed and missing browser headers on one side, and real mouse, touch or keyboard use and a solved proof of work on the other.
 
 For stronger proof, connect a self-hosted [Cap](https://capjs.js.org) server. The Cap widget comes with the plugin, and WordPress relays the challenge so visitors only ever talk to your site.
 
@@ -47,7 +51,7 @@ For stronger proof, connect a self-hosted [Cap](https://capjs.js.org) server. Th
 * No cookies, no local storage, no fingerprinting.
 * Visitors are counted with a salted hash of IP address and browser; the salt is replaced daily (or weekly or monthly), so visitors cannot be followed over time.
 * IP addresses are never stored. Screen sizes are bucketed and browser versions dropped.
-* Do Not Track and Global Privacy Control are respected. Logged-in roles, IP ranges and paths can be excluded.
+* Do Not Track and Global Privacy Control are respected by default (Brave sends Global Privacy Control, and Firefox does in private windows); you can turn that off. Logged-in roles, IP ranges and paths can be excluded.
 * Suggested privacy policy text and an opt-out shortcode: `[nemvo_analytics_optout]`.
 * Data older than a set number of days (395 by default) is deleted automatically.
 
@@ -94,7 +98,7 @@ It looks up which network a visit came from, the same public information any web
 
 = Does it work with page caching or a CDN? =
 
-Pageviews are sent by JavaScript, so cached pages are counted. But "delay JavaScript" and similar features can hold back the tracker, and a CDN or proxy hides visitor addresses unless you turn on "Trust proxy headers". The plugin was built for sites without caching; the setup checklist warns you when it finds a cache or a proxy.
+Pageviews are sent by JavaScript, so cached pages are counted. But "delay JavaScript" and similar features can hold back the tracker, and a CDN or proxy can hide visitor addresses. Reverse proxies on a private network (Nginx Proxy Manager, Traefik, Caddy) are handled automatically; for a CDN such as Cloudflare, set "Forwarded visitor addresses" to Always. The plugin was built for sites without caching; the setup checklist warns you when it finds a cache or a proxy.
 
 = Where is the data stored? =
 
@@ -145,10 +149,22 @@ The minified files are unmodified copies of the published packages. `assets/js/t
 
 == Changelog ==
 
+= 1.0.1 =
+* New: every page request is recorded on the server as it is served, and the tracker's hit is matched to the same page view, so visits count even when the browser does not run the tracker (most bots, blocked scripts), and are never counted twice. Turn it off under Tracking › "Record every page request on the server".
+* New: Settings › Check tracking. Loads the home page and sends a test hit from the server, then lists every hit the site receives for 30 minutes with what happened to it, including browsers that stop the tracker themselves (Do Not Track, Global Privacy Control).
+* New: "Forwarded visitor addresses" (Automatic, Always, Never) replaces "Trust proxy headers". Automatic uses the address a reverse proxy on a private network passes on, such as Nginx Proxy Manager, Traefik or Caddy.
+* New: when only automated visits exist in a period, the dashboard says so and links to them.
+* Changed: a datacenter or VPN network alone weighs less in the bot score (30 instead of 40), so people on a VPN are counted as people.
+* Fixed: the map's World, Europe and other views now highlight the selected view on the first click.
+* Fixed: a server without socket functions no longer loses hits when looking up networks.
+
 = 1.0.0 =
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Adds Settings › Check tracking, to see why visits do or don't show up, and automatic handling of reverse proxies.
 
 = 1.0.0 =
 First release.

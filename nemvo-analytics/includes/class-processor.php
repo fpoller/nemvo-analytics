@@ -31,6 +31,14 @@ class Processor {
 	public static $flags = array();
 
 	/**
+	 * Pageview ids given a new id in the last batch (a cached page seen by
+	 * another visitor): original id => new id.
+	 *
+	 * @var string[]
+	 */
+	public static $renamed = array();
+
+	/**
 	 * Write a batch.
 	 *
 	 * @param array[]       $hits   Hits.
@@ -63,31 +71,28 @@ class Processor {
 		$views    = array();
 		$sessions = array();
 		$open     = array();
-		$new_pvs  = array();
 		$visitors = array();
 		$min_at   = null;
 		foreach ( $hits as $hit ) {
 			if ( 'pv' === $hit['t'] ) {
-				$new_pvs[ $hit['pv'] ]       = true;
 				$visitors[ $hit['visitor'] ] = true;
 				$min_at                      = null === $min_at ? $hit['at'] : min( $min_at, $hit['at'] );
 			}
 		}
+		// Every pageview the batch mentions, including pageviews the server recorded that tracker hits now confirm.
 		$need = array();
 		foreach ( $hits as $hit ) {
-			if ( 'pv' !== $hit['t'] && ! isset( $new_pvs[ $hit['pv'] ] ) ) {
-				$need[ $hit['pv'] ] = true;
-			}
+			$need[ $hit['pv'] ] = true;
 		}
 		if ( $need ) {
-			$rows = $db->get_results( "SELECT id, session_id, pv, path, engaged_ms, scroll, is_exit FROM `$t_p` WHERE pv IN (" . self::in( $db, array_keys( $need ) ) . ')', ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
+			$rows = $db->get_results( "SELECT id, session_id, pv, visitor, path, engaged_ms, scroll, is_exit FROM `$t_p` WHERE pv IN (" . self::in( $db, array_keys( $need ) ) . ')', ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
 			foreach ( (array) $rows as $row ) {
 				$row['new']          = false;
 				$row['dirty']        = false;
 				$views[ $row['pv'] ] = $row;
 			}
 		}
-		$cols = 'id, visitor, started_at, last_seen, duration, pageviews, events, is_bounce, exit_path, exit_pv, bot_flags, bot_score';
+		$cols = 'id, visitor, started_at, last_seen, duration, pageviews, events, is_bounce, exit_path, exit_pv, bot_flags, bot_score, screen, language, country, region, city, asn, org, network, company';
 		$ids  = array_unique( array_map( 'intval', array_column( $views, 'session_id' ) ) );
 		if ( $ids ) {
 			foreach ( (array) $db->get_results( "SELECT $cols FROM `$t_s` WHERE id IN (" . implode( ',', $ids ) . ')', ARRAY_A ) as $row ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery
@@ -105,20 +110,31 @@ class Processor {
 		}
 
 		$db->query( 'START TRANSACTION' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-		$new_events = array();
-		$clear_exit = array();
-		$seen_pv    = array();
-		$track_404  = (bool) Settings::get( 'track_404' );
+		$new_events    = array();
+		$clear_exit    = array();
+		$track_404     = (bool) Settings::get( 'track_404' );
+		self::$renamed = array();
 
 		foreach ( $hits as $hit ) {
 			$at = (string) $hit['at'];
 			switch ( $hit['t'] ) {
 				case 'pv':
-					if ( isset( $seen_pv[ $hit['pv'] ] ) ) {
-						break;
+					if ( isset( $views[ $hit['pv'] ] ) ) {
+						$known = $views[ $hit['pv'] ];
+						$ksid  = (int) $known['session_id'];
+						if ( $known['visitor'] === $hit['visitor'] && isset( $sessions[ $ksid ] ) ) {
+							// The tracker confirms the pageview the server recorded: no new pageview, more detail.
+							if ( $hit['flags'] & Bot::JS ) {
+								self::confirm( $sessions[ $ksid ], $hit, $enrich );
+							}
+							break;
+						}
+						// The same id from someone else (a cached copy of the page): a pageview of its own.
+						$original                   = $hit['pv'];
+						$hit['pv']                  = bin2hex( random_bytes( 8 ) );
+						self::$renamed[ $original ] = $hit['pv'];
 					}
-					$seen_pv[ $hit['pv'] ] = true;
-					$sid                   = $open[ $hit['visitor'] ] ?? 0;
+					$sid = $open[ $hit['visitor'] ] ?? 0;
 					if ( $sid && strtotime( $sessions[ $sid ]['last_seen'] ) < strtotime( $at ) - $timeout ) {
 						$sid = 0;
 					}
@@ -270,7 +286,7 @@ class Processor {
 			if ( $ok && ( $s['dirty'] || $score !== $s['bot_score'] ) ) {
 				$ok = false !== $db->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 					$db->prepare(
-						"UPDATE `$t_s` SET last_seen = %s, duration = %d, pageviews = %d, events = %d, is_bounce = %d, exit_path = %s, exit_pv = %s, bot_flags = %d, bot_score = %d WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+						"UPDATE `$t_s` SET last_seen = %s, duration = %d, pageviews = %d, events = %d, is_bounce = %d, exit_path = %s, exit_pv = %s, bot_flags = %d, bot_score = %d, screen = %s, language = %s, country = %s, region = %s, city = %s, asn = %d, org = %s, network = %s, company = %s WHERE id = %d", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 						$s['last_seen'],
 						$s['duration'],
 						$s['pageviews'],
@@ -280,6 +296,15 @@ class Processor {
 						$s['exit_pv'],
 						$s['bot_flags'],
 						$score,
+						(string) $s['screen'],
+						(string) $s['language'],
+						(string) $s['country'],
+						(string) $s['region'],
+						(string) $s['city'],
+						(int) $s['asn'],
+						(string) $s['org'],
+						(string) $s['network'],
+						(string) $s['company'],
 						$sid
 					)
 				);
@@ -288,9 +313,46 @@ class Processor {
 		foreach ( $views as $pv => $v ) {
 			self::$flags[ $pv ] = isset( $sessions[ (int) $v['session_id'] ] ) ? $sessions[ (int) $v['session_id'] ]['bot_flags'] : 0;
 		}
+		foreach ( self::$renamed as $original => $pv ) {
+			self::$flags[ $original ] = self::$flags[ $pv ] ?? 0;
+		}
 
 		$db->query( $ok ? 'COMMIT' : 'ROLLBACK' ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		return $ok;
+	}
+
+	/**
+	 * Complete a session with what only the tracker knows.
+	 *
+	 * @param array         $s      Session row (changed in place).
+	 * @param array         $hit    Tracker pv hit.
+	 * @param callable|null $enrich Network lookup with reverse DNS.
+	 */
+	private static function confirm( array &$s, array $hit, $enrich ) {
+		$s['bot_flags'] = $s['bot_flags'] | (int) $hit['flags'];
+		if ( '' === (string) $s['screen'] ) {
+			$s['screen'] = (string) $hit['screen'];
+		}
+		if ( '' === (string) $s['country'] && '' !== (string) ( $hit['geo']['country'] ?? '' ) ) {
+			$s['country'] = (string) $hit['geo']['country'];
+			$s['region']  = (string) ( $hit['geo']['region'] ?? '' );
+			$s['city']    = (string) ( $hit['geo']['city'] ?? '' );
+		}
+		// The server skipped the reverse DNS lookup to serve the page fast; do it now.
+		if ( $enrich && '' === (string) $s['company'] && in_array( (string) $s['network'], array( 'isp', '' ), true ) ) {
+			$enriched = call_user_func( $enrich, $hit );
+			if ( ! empty( $enriched['net']['network'] ) ) {
+				$s['asn']     = (int) $enriched['net']['asn'];
+				$s['org']     = (string) $enriched['net']['provider'];
+				$s['network'] = (string) $enriched['net']['network'];
+				$s['company'] = (string) $enriched['net']['company'];
+				if ( 'hosting' === $s['network'] ) {
+					$s['bot_flags'] |= Bot::DATACENTER;
+				}
+			}
+		}
+		$s['last_seen'] = max( $s['last_seen'], (string) $hit['at'] );
+		$s['dirty']     = true;
 	}
 
 	/**
@@ -369,7 +431,7 @@ class Processor {
 	 * @return array
 	 */
 	private static function session_row( array $row ) {
-		foreach ( array( 'id', 'duration', 'pageviews', 'events', 'is_bounce', 'bot_flags', 'bot_score' ) as $int ) {
+		foreach ( array( 'id', 'duration', 'pageviews', 'events', 'is_bounce', 'bot_flags', 'bot_score', 'asn' ) as $int ) {
 			$row[ $int ] = (int) $row[ $int ];
 		}
 		$row['dirty'] = false;

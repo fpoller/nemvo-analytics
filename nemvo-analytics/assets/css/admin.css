@@ -2491,6 +2491,37 @@ body.nva-screen[data-nva-theme="dark"] .nva-badge.is-warning {
 	text-align: right;
 }
 
+.nva-diag {
+	margin-top: 16px;
+	padding-top: 4px;
+	border-top: 1px solid var(--nva-grid);
+}
+
+.nva-diag__log td {
+	vertical-align: top;
+}
+
+.nva-diag__log td:first-child {
+	white-space: nowrap;
+}
+
+.nva-diag__result {
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.nva-diag__result.is-good {
+	color: var(--nva-good);
+}
+
+.nva-diag__result.is-warn {
+	color: #9a6700;
+}
+
+.nva-diag__result.is-bad {
+	color: var(--nva-bad);
+}
+
 .nva-lookup {
 	padding: 12px 14px;
 	border-radius: 10px;

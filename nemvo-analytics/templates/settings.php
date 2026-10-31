@@ -347,6 +347,34 @@ $where = static function ( $status ) use ( $sources ) {
 			<section id="setup" class="nva-card nva-section">
 				<h2><?php esc_html_e( 'Setup checklist', 'nemvo-analytics' ); ?></h2>
 				<p class="nva-lead"><?php esc_html_e( 'Nemvo Analytics works as soon as it is activated. These checks show what is worth a look on this site; the same checks appear under Tools › Site Health.', 'nemvo-analytics' ); ?></p>
+
+				<div class="nva-diag" id="nva-diag">
+					<h3><?php esc_html_e( 'Check tracking', 'nemvo-analytics' ); ?></h3>
+					<p><?php esc_html_e( 'No visits showing up? This loads your home page and sends a test hit from the server, then shows every hit the site receives for 30 minutes, with what happened to it. Browse your site meanwhile, logged out or in a private window.', 'nemvo-analytics' ); ?></p>
+					<p class="nva-actions">
+						<button type="button" class="button button-primary" data-nva-action="diag-start"><?php esc_html_e( 'Check tracking', 'nemvo-analytics' ); ?></button>
+						<button type="button" class="button" data-nva-action="diag-stop" hidden><?php esc_html_e( 'Stop', 'nemvo-analytics' ); ?></button>
+						<span class="nva-result" role="status"></span>
+					</p>
+					<ul class="nva-checklist nva-diag__checks" hidden></ul>
+					<div class="nva-diag__live" hidden>
+						<p class="nva-muted nva-diag__status"></p>
+						<div class="nva-table-wrap">
+							<table class="nva-table nva-diag__log">
+								<thead>
+									<tr>
+										<th scope="col"><?php esc_html_e( 'When', 'nemvo-analytics' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Hit', 'nemvo-analytics' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Result', 'nemvo-analytics' ); ?></th>
+										<th scope="col"><?php esc_html_e( 'Details', 'nemvo-analytics' ); ?></th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
 				<ul class="nva-checklist">
 					<?php foreach ( $checks as $check ) : ?>
 						<li class="is-<?php echo esc_attr( $check[0] ); ?>">
@@ -365,7 +393,8 @@ $where = static function ( $status ) use ( $sources ) {
 				<h2><?php esc_html_e( 'Tracking', 'nemvo-analytics' ); ?></h2>
 				<div class="nva-checks">
 					<?php $checkbox( 'tracking_enabled', __( 'Collect statistics', 'nemvo-analytics' ), __( 'Turn off to pause collection without losing data.', 'nemvo-analytics' ) ); ?>
-					<?php $checkbox( 'respect_dnt', __( 'Respect Do Not Track and Global Privacy Control', 'nemvo-analytics' ) ); ?>
+					<?php $checkbox( 'server_hits', __( 'Record every page request on the server', 'nemvo-analytics' ), __( 'Counts each page view as it is served, also when the browser never runs the tracker (most bots, blocked scripts). The tracker then confirms the same page view and adds time on page, scroll depth, screen size and human signals; it is never counted twice.', 'nemvo-analytics' ) ); ?>
+					<?php $checkbox( 'respect_dnt', __( 'Respect Do Not Track and Global Privacy Control', 'nemvo-analytics' ), __( 'Browsers that send these signals are not counted at all. Brave sends Global Privacy Control by default, and Firefox does in private windows. The statistics are anonymous and cookieless, so you may turn this off.', 'nemvo-analytics' ) ); ?>
 					<?php $checkbox( 'inline_script', __( 'Print the tracker inline (6 KB)', 'nemvo-analytics' ), __( 'Saves a request and is not blocked by URL-based filter lists.', 'nemvo-analytics' ) ); ?>
 				</div>
 
@@ -532,10 +561,17 @@ $where = static function ( $status ) use ( $sources ) {
 					<?php $checkbox( 'geo_headers', __( 'Use country headers from a CDN or proxy', 'nemvo-analytics' ), __( 'Cloudflare, CloudFront, Vercel and others.', 'nemvo-analytics' ) ); ?>
 					<?php $checkbox( 'geo_timezone', __( 'Fall back to the browser time zone', 'nemvo-analytics' ), __( 'Works without any IP database. Accurate for most countries, but cannot tell apart countries that share a zone.', 'nemvo-analytics' ) ); ?>
 					<?php $checkbox( 'geo_auto_update', __( 'Update the downloaded IP databases monthly', 'nemvo-analytics' ) ); ?>
-					<?php $checkbox( 'trust_proxy', __( 'Trust proxy headers for the visitor IP (X-Forwarded-For, CF-Connecting-IP)', 'nemvo-analytics' ), __( 'Only behind a reverse proxy or CDN you control, otherwise visitors can fake their address.', 'nemvo-analytics' ) ); ?>
 				</div>
 				<div class="nva-fields nva-fields--2">
 					<label><span><?php esc_html_e( 'Your own location .mmdb database (optional)', 'nemvo-analytics' ); ?></span><input type="text" name="<?php echo esc_attr( $opt ); ?>[geo_mmdb_path]" value="<?php echo esc_attr( $settings['geo_mmdb_path'] ); ?>" placeholder="/var/lib/GeoIP/GeoLite2-City.mmdb"></label>
+					<label><span><?php esc_html_e( 'Forwarded visitor addresses', 'nemvo-analytics' ); ?></span>
+						<select name="<?php echo esc_attr( $opt ); ?>[trust_proxy]">
+							<option value="auto" <?php selected( Privacy::proxy_mode(), 'auto' ); ?>><?php esc_html_e( 'Automatic: trust them from a reverse proxy on a private network (recommended)', 'nemvo-analytics' ); ?></option>
+							<option value="always" <?php selected( Privacy::proxy_mode(), 'always' ); ?>><?php esc_html_e( 'Always trust them (behind a CDN such as Cloudflare)', 'nemvo-analytics' ); ?></option>
+							<option value="never" <?php selected( Privacy::proxy_mode(), 'never' ); ?>><?php esc_html_e( 'Never: use the connecting address', 'nemvo-analytics' ); ?></option>
+						</select>
+						<small><?php esc_html_e( 'X-Forwarded-For, X-Real-IP, CF-Connecting-IP and similar. Automatic covers Nginx Proxy Manager, Traefik, Caddy and Docker setups: forwarded addresses are used only when the request comes from a private address, so visitors cannot fake theirs. If your web server already restores visitor addresses (like the official WordPress Docker image does), nothing changes.', 'nemvo-analytics' ); ?></small>
+					</label>
 					<label><span><?php esc_html_e( 'Precision stored', 'nemvo-analytics' ); ?></span>
 						<select name="<?php echo esc_attr( $opt ); ?>[geo_precision]">
 							<option value="country" <?php selected( $settings['geo_precision'], 'country' ); ?>><?php esc_html_e( 'Country only', 'nemvo-analytics' ); ?></option>
@@ -554,7 +590,7 @@ $where = static function ( $status ) use ( $sources ) {
 					<tbody>
 						<?php
 						$labels = Bot::labels();
-						foreach ( Bot::weights() as $flag => $weight ) {
+						foreach ( array_filter( Bot::weights() ) as $flag => $weight ) {
 							printf( '<tr><td>%1$s</td><td class="nva-num">%2$s</td></tr>', esc_html( $labels[ $flag ] ), esc_html( ( $weight > 0 ? '+' : '' ) . $weight ) );
 						}
 						?>

@@ -8,6 +8,19 @@
 	}
 	w.nvaLoaded = true;
 
+	// While an administrator runs "Check tracking", say why the tracker stops (no identifiers are sent).
+	function stopped(reason, detail) {
+		if (!cfg.diag) {
+			return;
+		}
+		try {
+			var body = JSON.stringify({ t: 'x', r: reason, m: String(detail || '').slice(0, 120) });
+			if (!(n.sendBeacon && n.sendBeacon(cfg.endpoint, new Blob([body], { type: 'text/plain' })))) {
+				fetch(cfg.endpoint, { method: 'POST', body: body, keepalive: true, credentials: 'omit', headers: { 'Content-Type': 'text/plain' } }).catch(function () {});
+			}
+		} catch (e) {}
+	}
+
 	// Site owners can exclude their own browser by visiting any page with #nva-ignore.
 	try {
 		if (location.hash === '#nva-ignore') {
@@ -16,11 +29,13 @@
 			localStorage.removeItem('nva_ignore');
 		}
 		if (localStorage.getItem('nva_ignore') === '1') {
+			stopped('ignore', location.pathname);
 			return;
 		}
 	} catch (e) {}
 
 	if (cfg.dnt && (n.doNotTrack === '1' || w.doNotTrack === '1' || n.globalPrivacyControl === true)) {
+		stopped(n.globalPrivacyControl === true ? 'gpc' : 'dnt', location.pathname);
 		return;
 	}
 
@@ -36,6 +51,8 @@
 	var interacted = false;
 	var sentInteraction = false;
 	var lastPath = location.pathname;
+	// The server already recorded this page view; the tracker's hit confirms that one.
+	var serverPv = /^[a-f0-9]{16}$/.test(cfg.pv || '') ? cfg.pv : '';
 	var verifying = false;
 
 	function rid() {
@@ -241,7 +258,8 @@
 			pause();
 			flush();
 		}
-		pv = rid();
+		pv = serverPv || rid();
+		serverPv = '';
 		engaged = 0;
 		sentMs = -1;
 		sentScroll = -1;
@@ -275,6 +293,9 @@
 					return res.status === 200 ? res.json() : null;
 				})
 				.then(function (reply) {
+					if (reply && /^[a-f0-9]{16}$/.test(reply.id || '') && pv === id) {
+						pv = id = reply.id;
+					}
 					verify(reply, id);
 				})
 				.catch(function () {});
@@ -451,9 +472,17 @@
 	/** Public API: nvaTrack('Booked a call', 'Hero CTA'). */
 	w.nvaTrack = track;
 
+	function safeStart() {
+		try {
+			start();
+		} catch (e) {
+			stopped('error', e && e.message);
+		}
+	}
+
 	if (d.prerendering) {
-		d.addEventListener('prerenderingchange', start, { once: true });
+		d.addEventListener('prerenderingchange', safeStart, { once: true });
 	} else {
-		start();
+		safeStart();
 	}
 })(window, document, navigator);
