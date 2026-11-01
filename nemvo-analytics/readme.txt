@@ -4,7 +4,7 @@ Tags: analytics, statistics, privacy, bot detection, b2b
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -149,6 +149,9 @@ The minified files are unmodified copies of the published packages. `assets/js/t
 
 == Changelog ==
 
+= 1.0.2 =
+* Fixed: the setup checklist kept warning that visitor addresses were hidden behind a proxy after "Forwarded visitor addresses" was set to Automatic or Always. The warning now follows the current setting and clears itself once visitor addresses come through.
+
 = 1.0.1 =
 * New: every page request is recorded on the server as it is served, and the tracker's hit is matched to the same page view, so visits count even when the browser does not run the tracker (most bots, blocked scripts), and are never counted twice. Turn it off under Tracking › "Record every page request on the server".
 * New: Settings › Check tracking. Loads the home page and sends a test hit from the server, then lists every hit the site receives for 30 minutes with what happened to it, including browsers that stop the tracker themselves (Do Not Track, Global Privacy Control).
@@ -162,6 +165,9 @@ The minified files are unmodified copies of the published packages. `assets/js/t
 * First release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Fixes a setup warning about proxies that stayed after the setting was changed.
 
 = 1.0.1 =
 Adds Settings › Check tracking, to see why visits do or don't show up, and automatic handling of reverse proxies.

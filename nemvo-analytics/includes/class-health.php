@@ -36,12 +36,17 @@ class Health {
 	public static function note_request( array $headers ) {
 		// Only a problem when the visitor's own address is not known.
 		$header = self::proxy_header( $headers );
+		$env    = get_option( self::OPTION, array() );
+		$env    = is_array( $env ) ? $env : array();
 		if ( Privacy::is_public( Privacy::client_ip() ) || ( '' === $header && 'never' !== Privacy::proxy_mode() ) ) {
+			// Visitor addresses come through (again): forget an earlier warning.
+			if ( ! empty( $env['proxy'] ) ) {
+				unset( $env['proxy'], $env['proxy_header'] );
+				update_option( self::OPTION, $env, true );
+			}
 			return;
 		}
 		$header = '' === $header ? 'none' : $header;
-		$env = get_option( self::OPTION, array() );
-		$env = is_array( $env ) ? $env : array();
 		if ( empty( $env['proxy'] ) || time() - (int) $env['proxy'] > HOUR_IN_SECONDS ) {
 			$env['proxy']        = time();
 			$env['proxy_header'] = $header;
@@ -134,7 +139,9 @@ class Health {
 		}
 
 		$env = get_option( self::OPTION, array() );
-		if ( ! empty( $env['proxy'] ) && time() - (int) $env['proxy'] < 7 * DAY_IN_SECONDS ) {
+		// A recorded forwarding header only matters while forwarded addresses are not trusted.
+		$untrusted = 'none' === ( $env['proxy_header'] ?? '' ) || 'never' === Privacy::proxy_mode();
+		if ( ! empty( $env['proxy'] ) && $untrusted && time() - (int) $env['proxy'] < 7 * DAY_IN_SECONDS ) {
 			$out[] = array(
 				'warning',
 				__( 'Visitor addresses are hidden behind a proxy', 'nemvo-analytics' ),
